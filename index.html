@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Euglena Livecam</title>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/skeleton.css"/>
+    <link rel="stylesheet" href="libs/jquery-ui/jquery-ui-1.10.0.custom.css"/>
+    <script src="dist/Collection.js"></script>
+    <script src="dist/Vector2.js"></script>
+    <script src="js/VectorLED.js"></script>
+	<script src="dist/Breakout-base.js"></script>
+	<script src="dist/socket_io.js"></script>
+	<script src="libs/jquery-1.10.2.min.js"></script>
+	<script src="libs/jquery-ui/jquery-ui-1.10.0.custom.min.js"></script>
+	<script src="libs/jquery.ui.touch-punch.min.js"></script>
+	<script src="js/object.js"></script>
+	<script src="js/joystick.js"></script>
+	<script src="dist/hand-1.1.2.js"></script>
+</head>
+<body>
+	<div class="container" style = "padding: 10px">
+		<div>
+			<div>
+				<h2 style="color: #FA6600;">Euglena Livecam</h1>
+			</div>
+    		<div id="canvasArea" style = "padding: 10px">
+				<canvas id="videoCanvas" style="z-index: 1; position:absolute">
+					<p>
+						Please use a browser that supports the Canvas Element, like
+						<a href="http://www.google.com/chrome">Chrome</a>,
+						<a href="http://www.mozilla.com/firefox/">Firefox</a>,
+						<a href="http://www.apple.com/safari/">Safari</a> or Internet Explorer 10
+					</p>
+				</canvas>
+				<canvas id="objCanvas" style="z-index: 2; position:absolute"></canvas>
+			</div>
+			<div id="chat" style="padding: 6px; max-height:300px; position:absolute; top: 560px;"></div>
+		</div>
+		<div id="controlArea" style = "width:300px; padding:0px; position:absolute; left: 680px">
+			<div align="center" style = "margin: 4px;">
+				<h5>TOP 5 SCORES</h5>
+				<div id="board"></div>
+			</div>
+			<div align="center" style="background:#000; padding: 6px; margin: 10px;">
+				<div>
+					<h5 style="color: #FA6600;">LED control</h5>
+				</div>
+				<div style = "padding: 6px; margin: 2px">
+					<canvas id="controlCanvas" style="z-index: 3"></canvas>
+				</div>
+			</div>
+			<div id="username" style="padding: 4px;">
+				<h6>What's your name?</h6>
+				<input type="text" name="usernameTxt" />
+				<input type="button" name="setUsername" value="Enter the Ring" />
+			</div>
+			<div id="sendChat" style="display:none;">
+				<input type="text" name="chatTxt" />
+				<input type="button" name="sendBtn" value="Send" />
+			</div>
+			<div style="background:#000;padding: 10px;">
+				<h6>Use the slider to set the random motion radius</h6>
+            	<h6 id="slider"></h6>
+            	<h6 id="value"></h6>
+			</div>
+	    </div>
+	    <div id="mdArea" style = "width:640px; padding: 10px;position:absolute; left: 0px;visibility:hidden;">
+			<div>
+				<h5>Motion Detection</h1>
+			</div>
+			<div style = "background:#000;">
+				<canvas id="mdCanvas" style="z-index: 4;"></canvas>
+				<!--<canvas id="testCanvas" style="z-index: 4; width: 640px; height: 480px;"></canvas>-->
+			</div>
+	    </div>
+	</div>
+</body>
+</html>
