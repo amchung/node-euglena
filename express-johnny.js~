@@ -1,4 +1,4 @@
-const PORT = 3001;
+const PORT = 3002;
 const HOST = '171.65.102.132';
 
 var express = require('express'),
@@ -9,10 +9,14 @@ var fs  = require('fs');
 	
 var app = express();
 
+var five = require("johnny-five"),
+board = new five.Board();
+
 const redis = require('redis');
 const client = redis.createClient();
 
 const io = require('socket.io');
+
 const list = redis.createClient();
 
 const _ = require('underscore');
@@ -20,10 +24,38 @@ const _ = require('underscore');
 if (!module.parent) {
     server.listen(PORT, HOST);
     const socket  = io.listen(server);
+
+socket.configure(function () {
+  //socket.set("transports", ["xhr-polling"]);
+  //socket.set("polling duration", 10);
+  //socket.set("close timeout", 10);
+  socket.set("log level", 1);
+});
+
+    board.on("ready", function(){
+        this.pinMode(5, five.Pin.PWM);
+        this.pinMode(6, five.Pin.PWM);
+        this.pinMode(9, five.Pin.PWM);
+        this.pinMode(10, five.Pin.PWM);
+        this.analogWrite(5,0);
+        this.analogWrite(6,0);
+        this.analogWrite(9,0);
+        this.analogWrite(10,0);
+	console.log("Arduino ready to use")
+    });
+
+    board.on('changeLED', function(arrow){
+        this.analogWrite(5,arrow.led1*255);
+        this.analogWrite(6,arrow.led2*255);
+        this.analogWrite(9,arrow.led3*255);
+        this.analogWrite(10,arrow.led4*255);
+    });
  
     socket.on('connection', function(client) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
+	//const ard = redis.createClient();
+	sub.subscribe('arduino');
         const pub = redis.createClient();
         
     	list.zrevrange("myset", 0 , 4, 'withscores', function(err,members){
@@ -37,12 +69,11 @@ if (!module.parent) {
         sub.on("message", function(channel, message) {
             client.send(message);
         });
- 
         client.on('message', function(msg) {
         	switch(msg.type)
 			{
 				case "setUsername":
-  					pub.publish("realtime", "A New Challenger Enters the Ring:" + client.id +"  =  "+ msg.user);
+  					pub.publish("realtime", "1&&"+"A New Challenger Enters the Ring:" + client.id +"  =  "+ msg.user);
   					break;
 				case "sendscore":
   					list.zadd("myset", msg.score , msg.user);
@@ -55,10 +86,14 @@ if (!module.parent) {
 					});
   					break;
   				case "chat":
-  					pub.publish("realtime", msg.message);
+  					pub.publish("realtime", "1&&"+msg.message);
   					break;
-				default:
-  					console.log("!!!received unknown input msg!!!");
+  				case "sendarrow":
+					board.emit('changeLED', msg);
+					pub.publish("arduino", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
+  					break;
+				//default:
+  				//	console.log("!!!received unknown input msg!!!");
 		}
         });
  
