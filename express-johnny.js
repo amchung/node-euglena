@@ -55,7 +55,6 @@ socket.configure(function () {
     
     board.on('flushChamber', function(){
     	this.digitalWrite(12, 1);
-    	setTimeout(this.digitalWrite(12, 0), 2000);
     });
  
     socket.on('connection', function(client) {

@@ -37,10 +37,12 @@ socket.configure(function () {
         this.pinMode(6, five.Pin.PWM);
         this.pinMode(9, five.Pin.PWM);
         this.pinMode(10, five.Pin.PWM);
+        this.pinMode(12, 1);
         this.analogWrite(5,0);
         this.analogWrite(6,0);
         this.analogWrite(9,0);
         this.analogWrite(10,0);
+        this.digitalWrite(12, 0);
 	console.log("Arduino ready to use")
     });
 
@@ -50,12 +52,17 @@ socket.configure(function () {
         this.analogWrite(9,arrow.led3*255);
         this.analogWrite(10,arrow.led4*255);
     });
+    
+    board.on('flushChamber', function(){
+    	this.digitalWrite(12, 1);
+    	setTimeout(function(){this.digitalWrite(12, 0);}, 2000);
+	
+    });
  
     socket.on('connection', function(client) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
-	//const ard = redis.createClient();
-	sub.subscribe('arduino');
+		sub.subscribe('arduino');
         const pub = redis.createClient();
         
     	list.zrevrange("myset", 0 , 4, 'withscores', function(err,members){
@@ -92,11 +99,14 @@ socket.configure(function () {
 					board.emit('changeLED', msg);
 					pub.publish("arduino", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
+  				case "sendflush":
+  					board.emit('flushChamber', msg);
+  					pub.publish("realtime", "1&&"+"Flushing chamber...");
+  					break;
 				//default:
   				//	console.log("!!!received unknown input msg!!!");
 		}
         });
- 
         client.on('disconnect', function() {
             sub.quit();
             pub.publish("realtime","Disconnected :" + client.id);
