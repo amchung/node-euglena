@@ -53,10 +53,14 @@ socket.configure(function () {
         this.analogWrite(10,arrow.led4*255);
     });
     
-    board.on('flushChamber', function(){
+    board.on('valveOpen', function(){
     	this.digitalWrite(12, 1);
     });
- 
+    
+    board.on('valveClose', function(){
+    	this.digitalWrite(12, 0);
+    });
+    
     socket.on('connection', function(client) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
@@ -97,9 +101,13 @@ socket.configure(function () {
 					board.emit('changeLED', msg);
 					pub.publish("arduino", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
-  				case "sendflush":
-  					board.emit('flushChamber', msg);
-  					pub.publish("realtime", "1&&"+"Flushing chamber...");
+  				case "sendvalveopen":
+  					board.emit('valveOpen', msg);
+  					pub.publish("realtime", "1&&"+"Valve opened...");
+  					break;
+  				case "sendvalveclose":
+  					board.emit('valveClose', msg);
+  					pub.publish("realtime", "1&&"+"Valve closed.");
   					break;
 				//default:
   				//	console.log("!!!received unknown input msg!!!");
