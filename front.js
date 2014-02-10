@@ -63,6 +63,8 @@ socket.configure(function () {
   				case "chat":
   					pub.publish("realtime", "1&&"+msg.message);
   					break;
+				//default:
+  				//	console.log("!!!received unknown input msg!!!");
 		}
         });
         client.on('disconnect', function() {

@@ -63,6 +63,7 @@ socket.configure(function () {
 
     socket.on('connection', function(client) {
         const sub = redis.createClient();
+        sub.subscribe('realtime');
 		sub.subscribe('arduino');
         const pub = redis.createClient();
  
