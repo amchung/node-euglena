@@ -1,5 +1,5 @@
 var io = require('socket.io-client');
-var socket = io.connect("http://localhost:3002");
+var socket = new io.connect("http://171.65.102.132:3002");
 
 var five = require("johnny-five");
 /*
@@ -42,8 +42,9 @@ socket.on('connect', function() {
 	socket.emit('message', {channel:'arduino'});
 	//board = new five.Board();
 });
-	socket.on('message', function(msg) {
-        switch(msg.type)
+
+socket.on('message', function(msg) {
+    switch(msg.type)
 		{
   			case "sendarrow":
 				board.emit('changeLED', msg);
@@ -64,9 +65,8 @@ socket.on('connect', function() {
                 socket_client.json.send(reply);
   			break;
 		}
-	});
+});
 
-
-	socket.on('disconnect', function(client) {
-		console.log("Disconnected!!!");
-	});
+socket.on('disconnect', function(client) {
+	console.log("Disconnected!!!");
+});
