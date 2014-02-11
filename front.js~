@@ -13,12 +13,16 @@ const client = redis.createClient();
 const io = require('socket.io');
 
 const list = redis.createClient();
+const ledarray = redis.createClient();
+const valve = redis.createClient();
 
 const _ = require('underscore');
 
 if (!module.parent) {
     server.listen(PORT, HOST);
     const socket  = io.listen(server);
+
+var rooms = ['arduino','lab'];
 
 socket.configure(function () {
   //socket.set("transports", ["xhr-polling"]);
@@ -30,7 +34,6 @@ socket.configure(function () {
     socket.on('connection', function(client) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
-	sub.subscribe('arduino');
         const pub = redis.createClient();
         
     	list.zrevrange("myset", 0 , 4, 'withscores', function(err,members){
@@ -44,6 +47,7 @@ socket.configure(function () {
         sub.on("message", function(channel, message) {
             client.send(message);
         });
+        
         client.on('message', function(msg) {
         	switch(msg.type)
 			{
@@ -63,14 +67,11 @@ socket.configure(function () {
   				case "chat":
   					pub.publish("realtime", "1&&"+msg.message);
   					break;
-				case "gotarrow":
+  				case "sendarrow":
 					pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
-  				case "gotvalveopen":
-  					pub.publish("realtime", "1&&"+"Valve opened...");
-  					break;
-  				case "gotvalveclose":
-  					pub.publish("realtime", "1&&"+"Valve closed.");
+  				case "sendvalveopen":
+  					pub.publish("realtime", "1&&"+"Valve triggered.");
   					break;
 				//default:
   				//	console.log("!!!received unknown input msg!!!");

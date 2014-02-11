@@ -4,12 +4,8 @@ var socket = new io.connect("http://171.65.102.132:3002");
 var five = require("johnny-five")
 board = new five.Board();
 
-socket.configure(function () {
-  //socket.set("transports", ["xhr-polling"]);
-  //socket.set("polling duration", 10);
-  //socket.set("close timeout", 10);
-  socket.set("log level", 1);
-});
+const redis = require('redis');
+const list = redis.createClient();
 
 ////////////////////////////////////////////////
 //  johnny-five arduino functions
@@ -33,31 +29,30 @@ board.on("ready", function(){
         this.analogWrite(6,ledArray[1]*255);
         this.analogWrite(9,ledArray[2]*255);
         this.analogWrite(10,ledArray[3]*255);
-        
-        var reply = {type:'gotarrow', message: "0&&"+ledArray[0]+"^"+ledArray[1]+"^"+ledArray[2]+"^"+ledArray[3]};
-		//console.log(reply.message);
-        socket.json.send(reply);
     });
     
     board.on('valveOpen', function(){
     	this.digitalWrite(12, 1);
-    });
-    
-    board.on('valveClose', function(){
-    	this.digitalWrite(12, 0);
+	var delay = 1000; // 1000 msec delay
+	var now = new Date();
+	var desiredTime = new Date().setMilliseconds(now.getMilliseconds() + delay);
+	while (now < desiredTime) {
+    		now = new Date(); // update the current time
+	}
+	this.digitalWrite(12, 0);
     });
                                               //
 ////////////////////////////////////////////////
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
-	socket.emit('message', {channel:'arduino'});
 });
 
 socket.on('message', function(msg) {
-	//console.log(msg);
+	var d = new Date().getTime();
+	list.zadd("arduino_log", d , msg);
 	var str = msg.split("&&");
-    switch(Number(str[0]))
+    	switch(Number(str[0]))
 		{
   			case 0:
   				var ledArray = str[1].split("^");
@@ -65,15 +60,6 @@ socket.on('message', function(msg) {
   			break;
   			case 1:
   				board.emit('valveOpen', msg);
-				var reply = {type:'gotvalveopen', message: "1&&"+"Valve opened..."};
-				console.log(reply.message);
-                socket_client.json.send(reply);
-  			break;
-  			case 2:
-  				board.emit('valveClose', msg);
-  				var reply = {type:'gotvalveopen', message: "1&&"+"Valve closed."};
-  				console.log(reply.message);
-                socket_client.json.send(reply);
   			break;
 		}
 });
