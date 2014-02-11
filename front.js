@@ -68,19 +68,19 @@ socket.configure(function () {
 					pub.publish("arduino", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
   				case "sendvalveopen":
-  					pub.publish("arduino", "0&&"+msg.message);
+  					pub.publish("arduino", "1&&");
   					break;
   				case "sendvalveclose":
-  					pub.publish("arduino", "0&&"+msg.message);
+  					pub.publish("arduino", "2&&");
   					break;
 				case "gotarrow":
 					pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
   				case "gotvalveopen":
-  					pub.publish("realtime", "1&&"+"Valve opened...");
+  					pub.publish("realtime", msg.message);
   					break;
   				case "gotvalveclose":
-  					pub.publish("realtime", "1&&"+"Valve closed.");
+  					pub.publish("realtime", msg.message);
   					break;
 				//default:
   				//	console.log("!!!received unknown input msg!!!");

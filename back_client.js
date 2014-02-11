@@ -2,7 +2,7 @@ var io = require('socket.io-client');
 var socket = new io.connect("http://171.65.102.132:3002");
 
 var five = require("johnny-five");
-/*
+
 ////////////////////////////////////////////////
 //  johnny-five arduino functions
 
@@ -20,11 +20,15 @@ board.on("ready", function(){
 	console.log("Arduino ready to use")
 });
 
-    board.on('changeLED', function(arrow){
-        this.analogWrite(5,arrow.led1*255);
-        this.analogWrite(6,arrow.led2*255);
-        this.analogWrite(9,arrow.led3*255);
-        this.analogWrite(10,arrow.led4*255);
+    board.on('changeLED', function(ledArray){
+        this.analogWrite(5,ledArray[0]*255);
+        this.analogWrite(6,ledArray[1]*255);
+        this.analogWrite(9,ledArray[2]*255);
+        this.analogWrite(10,ledArray[3]*255);
+        
+        var reply = {type:'gotarrow', message: "0&&"+ledArray[0]+"^"+ledArray[1]+"^"+ledArray[2]+"^"+ledArray[3]};
+		console.log(reply.message);
+        socket.json.send(reply);
     });
     
     board.on('valveOpen', function(){
@@ -36,7 +40,7 @@ board.on("ready", function(){
     });
                                               //
 ////////////////////////////////////////////////
-*/
+
 socket.on('connect', function() {
 	console.log("Connected to front server..");
 	socket.emit('message', {channel:'arduino'});
@@ -44,22 +48,20 @@ socket.on('connect', function() {
 });
 
 socket.on('message', function(msg) {
-	console.log(msg);
-    switch(msg.type)
+	var str = msg.split("&&");
+    switch(Number(str[0]))
 		{
-  			case "sendarrow":
-				board.emit('changeLED', msg);
-				var reply = {type:'gotarrow', message: "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4};
-				console.log(reply.message);
-                socket_client.json.send(reply);
+  			case 0:
+  				var ledArray = str[1].split("^");
+				board.emit('changeLED', ledArray);
   			break;
-  			case "sendvalveopen":
+  			case 1:
   				board.emit('valveOpen', msg);
 				var reply = {type:'gotvalveopen', message: "1&&"+"Valve opened..."};
 				console.log(reply.message);
                 socket_client.json.send(reply);
   			break;
-  			case "sendvalveclose":
+  			case 2:
   				board.emit('valveClose', msg);
   				var reply = {type:'gotvalveopen', message: "1&&"+"Valve closed."};
   				console.log(reply.message);
