@@ -65,7 +65,7 @@ socket.configure(function () {
   					pub.publish("realtime", "1&&"+msg.message);
   					break;
   				case "sendarrow":
-					pub.publish("arduino", "0&&"+msg.message);
+					pub.publish("arduino", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
   				case "sendvalveopen":
   					pub.publish("arduino", "0&&"+msg.message);
