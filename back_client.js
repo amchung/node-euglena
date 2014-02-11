@@ -10,30 +10,16 @@ var app = express();
 var five = require("johnny-five"),
 board = new five.Board();
 
-var socket_client = require('socket.io-client');
 const redis = require('redis');
 const client = redis.createClient();
 
-const io = require('socket.io');
-
-
-if (!module.parent) {
-    server.listen(PORT, HOST);
-    const socket  = io.listen(server);
-
-    socket_client.connect("http://localhost:3002");
-
-socket.configure(function () {
-  //socket.set("transports", ["xhr-polling"]);
-  //socket.set("polling duration", 10);
-  //socket.set("close timeout", 10);
-  socket.set("log level", 1);
-});
+var io = require('socket.io-client');
+var socket_client = io.connect("http://localhost:3002");
 
 ////////////////////////////////////////////////
 //  johnny-five arduino functions
 
-    board.on("ready", function(){
+board.on("ready", function(){
         this.pinMode(5, five.Pin.PWM);
         this.pinMode(6, five.Pin.PWM);
         this.pinMode(9, five.Pin.PWM);
@@ -64,32 +50,33 @@ socket.configure(function () {
                                               //
 ////////////////////////////////////////////////
 
-    socket.on('connection', function(client) {
-        const sub = redis.createClient();
-        sub.subscribe('realtime');
-		sub.subscribe('arduino');
-        const pub = redis.createClient();
- 
-        client.on('message', function(msg) {
-        	switch(msg.type)
-			{
-  				case "sendarrow":
-					board.emit('changeLED', msg);
-					pub.publish("arduino", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
-  					break;
-  				case "sendvalveopen":
-  					board.emit('valveOpen', msg);
-  					pub.publish("realtime", "1&&"+"Valve opened...");
-  					break;
-  				case "sendvalveclose":
-  					board.emit('valveClose', msg);
-  					pub.publish("realtime", "1&&"+"Valve closed.");
-  					break;
-		}
-        });
-        client.on('disconnect', function() {
-            sub.quit();
-        });
-    });
-}
+socket_client.on('connect', function(client) {
+	console.log("Connected to front server..");
+	socket_client.emit('message', {channel:'arduino'});
+}); 
 
+socket_client.on('message', function(msg) {
+        switch(msg.type)
+		{
+  			case "sendarrow":
+				board.emit('changeLED', msg);
+				var reply = {type:'gotarrow', message: "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4};
+                		socket_client.json.send(reply);
+  			break;
+  			case "sendvalveopen":
+  				board.emit('valveOpen', msg);
+				var reply = {type:'gotvalveopen', message: "1&&"+"Valve opened..."};
+                		socket_client.json.send(reply);
+  			break;
+  			case "sendvalveclose":
+  				board.emit('valveClose', msg);
+  				var reply = {type:'gotvalveopen', message: "1&&"+"Valve closed."};
+                		socket_client.json.send(reply);
+  			break;
+		}
+});
+
+
+socket_client.on('disconnect', function(client) {
+	console.log("Disconnected!!!");
+});

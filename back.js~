@@ -10,7 +10,6 @@ var app = express();
 var five = require("johnny-five"),
 board = new five.Board();
 
-var socket_client = require('socket.io-client');
 const redis = require('redis');
 const client = redis.createClient();
 
@@ -20,8 +19,6 @@ const io = require('socket.io');
 if (!module.parent) {
     server.listen(PORT, HOST);
     const socket  = io.listen(server);
-
-    socket_client.connect("http://localhost:3002");
 
 socket.configure(function () {
   //socket.set("transports", ["xhr-polling"]);
