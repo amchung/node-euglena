@@ -44,7 +44,7 @@ board.on("ready", function(){
 socket.on('connect', function() {
 	console.log("Connected to front server..");
 	socket.emit('message', {channel:'arduino'});
-	//board = new five.Board();
+	board = new five.Board();
 });
 
 socket.on('message', function(msg) {
