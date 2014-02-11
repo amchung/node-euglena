@@ -44,6 +44,7 @@ socket.on('connect', function() {
 });
 
 socket.on('message', function(msg) {
+	console.log(msg.type);
     switch(msg.type)
 		{
   			case "sendarrow":
