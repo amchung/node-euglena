@@ -1,7 +1,8 @@
 var io = require('socket.io-client');
 var socket = new io.connect("http://171.65.102.132:3002");
 
-var five = require("johnny-five");
+var five = require("johnny-five")
+board = new five.Board();
 
 ////////////////////////////////////////////////
 //  johnny-five arduino functions
@@ -44,7 +45,6 @@ board.on("ready", function(){
 socket.on('connect', function() {
 	console.log("Connected to front server..");
 	socket.emit('message', {channel:'arduino'});
-	board = new five.Board();
 });
 
 socket.on('message', function(msg) {
