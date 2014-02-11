@@ -57,17 +57,20 @@ socket_client.on('connect', function() {
   			case "sendarrow":
 				board.emit('changeLED', msg);
 				var reply = {type:'gotarrow', message: "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4};
-                		socket_client.json.send(reply);
+				console.log(reply.message);
+                socket_client.json.send(reply);
   			break;
   			case "sendvalveopen":
   				board.emit('valveOpen', msg);
 				var reply = {type:'gotvalveopen', message: "1&&"+"Valve opened..."};
-                		socket_client.json.send(reply);
+				console.log(reply.message);
+                socket_client.json.send(reply);
   			break;
   			case "sendvalveclose":
   				board.emit('valveClose', msg);
   				var reply = {type:'gotvalveopen', message: "1&&"+"Valve closed."};
-                		socket_client.json.send(reply);
+  				console.log(reply.message);
+                socket_client.json.send(reply);
   			break;
 		}
 	});
