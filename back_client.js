@@ -4,6 +4,13 @@ var socket = new io.connect("http://171.65.102.132:3002");
 var five = require("johnny-five")
 board = new five.Board();
 
+socket.configure(function () {
+  //socket.set("transports", ["xhr-polling"]);
+  //socket.set("polling duration", 10);
+  //socket.set("close timeout", 10);
+  socket.set("log level", 1);
+});
+
 ////////////////////////////////////////////////
 //  johnny-five arduino functions
 
@@ -48,7 +55,7 @@ socket.on('connect', function() {
 });
 
 socket.on('message', function(msg) {
-	console.log(msg);
+	//console.log(msg);
 	var str = msg.split("&&");
     switch(Number(str[0]))
 		{
