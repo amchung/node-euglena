@@ -1,7 +1,8 @@
 const PORT = 3004;
 const HOST = '171.65.102.132';
 
-var socket = require('socket.io-client')("http://localhost:3002");
+var io = require('socket.io-client');
+var socket = io.connect("http://localhost:3002");
 
 var five = require("johnny-five"),
 board = new five.Board();
@@ -43,7 +44,8 @@ board.on("ready", function(){
 socket.on('connect', function() {
 	console.log("Connected to front server..");
 	socket.emit('message', {channel:'arduino'});
-
+	board = new five.Board();
+});
 	socket.on('message', function(msg) {
         switch(msg.type)
 		{
@@ -72,5 +74,3 @@ socket.on('connect', function() {
 	socket_client.on('disconnect', function(client) {
 		console.log("Disconnected!!!");
 	});
-
-}); 
