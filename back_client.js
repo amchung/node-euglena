@@ -1,17 +1,10 @@
 const PORT = 3004;
 const HOST = '171.65.102.132';
 
-var express = require('express'),
-	http = require('http'),
-	server = http.createServer(app);
-	
-var app = express();
+var socket = require('socket.io-client')("http://localhost:3002");
 
 var five = require("johnny-five"),
 board = new five.Board();
-
-var io = require('socket.io-client');
-var socket_client = io.connect("http://localhost:3002");
 
 ////////////////////////////////////////////////
 //  johnny-five arduino functions
@@ -28,7 +21,7 @@ board.on("ready", function(){
         this.analogWrite(10,0);
         this.digitalWrite(12, 0);
 	console.log("Arduino ready to use")
-    });
+});
 
     board.on('changeLED', function(arrow){
         this.analogWrite(5,arrow.led1*255);
@@ -47,11 +40,11 @@ board.on("ready", function(){
                                               //
 ////////////////////////////////////////////////
 
-socket_client.on('connect', function() {
+socket.on('connect', function() {
 	console.log("Connected to front server..");
-	socket_client.emit('message', {channel:'arduino'});
+	socket.emit('message', {channel:'arduino'});
 
-	socket_client.on('message', function(msg) {
+	socket.on('message', function(msg) {
         switch(msg.type)
 		{
   			case "sendarrow":
