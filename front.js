@@ -65,13 +65,13 @@ socket.configure(function () {
   					pub.publish("realtime", "1&&"+msg.message);
   					break;
   				case "sendarrow":
-					pub.publish("arduino", msg.message);
+					pub.publish("arduino", "1&&"+msg.message);
   					break;
   				case "sendvalveopen":
-  					pub.publish("arduino", msg.message);
+  					pub.publish("arduino", "1&&"+msg.message);
   					break;
   				case "sendvalveclose":
-  					pub.publish("arduino", msg.message);
+  					pub.publish("arduino", "1&&"+msg.message);
   					break;
 				case "gotarrow":
 					pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
