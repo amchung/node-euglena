@@ -71,6 +71,6 @@ socket.on('connect', function() {
 	});
 
 
-	socket_client.on('disconnect', function(client) {
+	socket.on('disconnect', function(client) {
 		console.log("Disconnected!!!");
 	});
