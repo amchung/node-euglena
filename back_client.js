@@ -1,11 +1,7 @@
-const PORT = 3004;
-const HOST = '171.65.102.132';
-
 var io = require('socket.io-client');
 var socket = io.connect("http://localhost:3002");
 
 var five = require("johnny-five"),
-board = new five.Board();
 
 ////////////////////////////////////////////////
 //  johnny-five arduino functions
