@@ -28,7 +28,7 @@ board.on("ready", function(){
         this.analogWrite(10,ledArray[3]*255);
         
         var reply = {type:'gotarrow', message: "0&&"+ledArray[0]+"^"+ledArray[1]+"^"+ledArray[2]+"^"+ledArray[3]};
-		console.log(reply.message);
+		//console.log(reply.message);
         socket.json.send(reply);
     });
     
@@ -48,6 +48,7 @@ socket.on('connect', function() {
 });
 
 socket.on('message', function(msg) {
+	console.log(msg);
 	var str = msg.split("&&");
     switch(Number(str[0]))
 		{
