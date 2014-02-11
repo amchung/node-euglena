@@ -10,9 +10,6 @@ var app = express();
 var five = require("johnny-five"),
 board = new five.Board();
 
-const redis = require('redis');
-const client = redis.createClient();
-
 var io = require('socket.io-client');
 var socket_client = io.connect("http://localhost:3002");
 
@@ -50,12 +47,11 @@ board.on("ready", function(){
                                               //
 ////////////////////////////////////////////////
 
-socket_client.on('connect', function(client) {
+socket_client.on('connect', function() {
 	console.log("Connected to front server..");
 	socket_client.emit('message', {channel:'arduino'});
-}); 
 
-socket_client.on('message', function(msg) {
+	socket_client.on('message', function(msg) {
         switch(msg.type)
 		{
   			case "sendarrow":
@@ -74,9 +70,11 @@ socket_client.on('message', function(msg) {
                 		socket_client.json.send(reply);
   			break;
 		}
-});
+	});
 
 
-socket_client.on('disconnect', function(client) {
-	console.log("Disconnected!!!");
-});
+	socket_client.on('disconnect', function(client) {
+		console.log("Disconnected!!!");
+	});
+
+}); 

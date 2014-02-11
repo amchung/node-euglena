@@ -9,6 +9,7 @@ var app = express();
 
 const redis = require('redis');
 const client = redis.createClient();
+const ard_client = redis.createClient();
 
 const io = require('socket.io');
 
@@ -30,8 +31,10 @@ socket.configure(function () {
     socket.on('connection', function(client) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
-	sub.subscribe('arduino');
+        const ard_sub = redis.createClient();
+		ard_sub.subscribe('arduino');
         const pub = redis.createClient();
+        const ard_pub = redis.createClient();
         
     	list.zrevrange("myset", 0 , 4, 'withscores', function(err,members){
 			var lists=_.groupBy(members,function(a,b){
@@ -44,6 +47,26 @@ socket.configure(function () {
         sub.on("message", function(channel, message) {
             client.send(message);
         });
+        
+        ard_pub.on("message", function(channel, message) {
+            ard_client.send(message);
+        });
+        
+        ard_cli.on('message', function(msg) {
+        	switch(msg.type)
+        	{
+				case "gotarrow":
+					pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
+  					break;
+  				case "gotvalveopen":
+  					pub.publish("realtime", "1&&"+"Valve opened...");
+  					break;
+  				case "gotvalveclose":
+  					pub.publish("realtime", "1&&"+"Valve closed.");
+  					break;
+        	}
+        });
+        
         client.on('message', function(msg) {
         	switch(msg.type)
 			{
@@ -63,23 +86,14 @@ socket.configure(function () {
   				case "chat":
   					pub.publish("realtime", "1&&"+msg.message);
   					break;
-				case "sendarrow":
-					pub.publish("arduino", msg.message);
+  				case "sendarrow":
+					ard_pub.publish("arduino", msg.message);
   					break;
   				case "sendvalveopen":
-  					pub.publish("arduino", msg.message);
+  					ard_pub.publish("arduino", msg.message);
   					break;
   				case "sendvalveclose":
-  					pub.publish("arduino", msg.message);
-  					break;
-				case "gotarrow":
-					pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
-  					break;
-  				case "gotvalveopen":
-  					pub.publish("realtime", "1&&"+"Valve opened...");
-  					break;
-  				case "gotvalveclose":
-  					pub.publish("realtime", "1&&"+"Valve closed.");
+  					ard_pub.publish("arduino", msg.message);
   					break;
 				//default:
   				//	console.log("!!!received unknown input msg!!!");
