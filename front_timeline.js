@@ -76,6 +76,10 @@ socket.configure(function () {
 			}
         });
         
+        client.on("error", function (err) {
+        	console.log("Error "+err);
+        });
+        
         client.on('timeline',function(msg){
         	// get max limit
         	var timeline_end = list.get("global:next_tb_id");
@@ -98,8 +102,17 @@ socket.configure(function () {
 					console.log(begintime);
         			console.log(endtime);
         			
-        			var firstid = list.get("tb_time:"+begintime+":tb_id");
-        			var lastid = list.get("tb_time:"+endtime+":tb_id");
+        			var firstid;
+        			list.get("tb_time:"+begintime+":tb_id", function(err,res){
+        				firstid = res;
+        			});
+        			var lastid;
+        			list.get("tb_time:"+endtime+":tb_id", function(err,res){
+        				lastid = res;
+        			});
+        			
+        			console.log(firstid);
+        			console.log(lastid);
         			
         			// if out of range
         			if (firstid==null){
@@ -114,9 +127,10 @@ socket.configure(function () {
         			console.log(firstid);
         			console.log(lastid);
         			
+        			/*
         			var JSONData = [];
         			// get blocks
-        			for (var i=firstid;i<=lastid;i++){
+        			for (var i=firstid;i<=lastid;i++){*/
         				
         				/*var block;
         				block.id = i;
@@ -125,7 +139,7 @@ socket.configure(function () {
 						block.userid = list.get("tb_id:"+i+":userid");
 						block.expid = list.get("tb_id:"+i+":expid");*/
 						
-						JSONData.push({
+						/*JSONData.push({
 							"id": i, 
 							"time": list.get("tb_id:"+i+":time"),
 							"lock": list.get("tb_id:"+i+":locked"),
@@ -135,7 +149,7 @@ socket.configure(function () {
 					}
 					
 					// emit results
-					client.emit("postblocks",  JSONData );
+					client.emit("postblocks",  JSONData );*/
         			break;
         		case "writeblocks":
         			// convert dates and get block ids
