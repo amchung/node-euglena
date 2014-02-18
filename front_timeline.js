@@ -84,14 +84,16 @@ socket.configure(function () {
         	{
         		case "callblocks":
         			// convert dates and get block ids
-        			var beginT = msg.begintime;
-        			var endT = msg.endtime;
+        			var beginT = new Date(msg.begintime);
+        			var endT = new Date(msg.endtime);
         			
+        			console.log(msg.begintime);
+        			console.log(msg.endtime);
         			console.log(beginT);
         			console.log(endT);
         			
-        			var begintime = Date.UTC(beginT.getUTCFullYear(),beginT.getUTCMonth(),beginT.getUTCDate(),beginT.getUTCHours());
-					var endtime = Date.UTC(endT.getUTCFullYear(),endT.getUTCMonth(),endT.getUTCDate(),endT.getUTCHours());
+        			var begintime = beginT.getTime();
+					var endtime = endT.getTime();
 					
 					console.log(begintime);
         			console.log(endtime);
