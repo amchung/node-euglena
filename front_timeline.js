@@ -84,10 +84,16 @@ socket.configure(function () {
         	{
         		case "callblocks":
         			// convert dates and get block ids
-        			var begintime = msg.begintime;
-        			var endtime = msg.endtime;
+        			var beginT = msg.begintime;
+        			var endT = msg.endtime;
         			
-        			console.log(begintime);
+        			console.log(beginT);
+        			console.log(endT);
+        			
+        			var begintime = Date.UTC(year(beginT),month(beginT),date(beginT),hour(beginT));
+					var endtime = Date.UTC(year(endT),month(endT),date(endT),hour(endT));
+					
+					console.log(begintime);
         			console.log(endtime);
         			
         			var firstid = list.get("tb_time:"+begintime+":tb_id");
@@ -108,7 +114,7 @@ socket.configure(function () {
         			
         			var JSONData = [];
         			// get blocks
-        			for (var i=firstid;i=<lastid;i++){
+        			for (var i=firstid;i<=lastid;i++){
         				
         				/*var block;
         				block.id = i;
