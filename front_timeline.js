@@ -111,8 +111,8 @@ socket.configure(function () {
         				lastid = res;
         			});
         			
-        			console.log("looking up : block # "firstid);
-        			console.log(" ~  block # " lastid);
+        			console.log("looking up : block # "+firstid);
+        			console.log(" ~  block # " +lastid);
         			
         			// if out of range
         			if (firstid == null){
