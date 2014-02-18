@@ -111,26 +111,26 @@ socket.configure(function () {
         				lastid = res;
         			});
         			
-        			console.log(firstid);
-        			console.log(lastid);
+        			console.log("looking up : block # "firstid);
+        			console.log(" ~  block # " lastid);
         			
         			// if out of range
-        			if (firstid==null){
+        			if (firstid == null){
         				firstid = 0;
-        				lastid = firstid + (24*60/5);
+        				lastid = firstid + (3*60/5);
         			}
-        			if (lastid==null)
+        			if (lastid == null)
         			{
         				lastid = timeline_end;
-        				firstid = lastid - +(24*60/5);
+        				firstid = lastid - (3*60/5);
         			}
         			console.log(firstid);
         			console.log(lastid);
         			
-        			/*
+        			
         			var JSONData = [];
         			// get blocks
-        			for (var i=firstid;i<=lastid;i++){*/
+        			for (var i=firstid;i<=lastid;i++){
         				
         				/*var block;
         				block.id = i;
@@ -139,7 +139,28 @@ socket.configure(function () {
 						block.userid = list.get("tb_id:"+i+":userid");
 						block.expid = list.get("tb_id:"+i+":expid");*/
 						
-						/*JSONData.push({
+						var time;
+        				list.get("tb_id:"+i+":time", function(err,res){
+        					time = res;
+        				});
+        				
+        				var lock;
+        				list.get("tb_id:"+i+":locked", function(err,res){
+        					lock = res;
+        				});
+						
+						var userid;
+        				list.get("tb_id:"+i+":userid", function(err,res){
+        					userid = res;
+        				});
+        				
+        				var expid;
+        				list.get("tb_id:"+i+":expid", function(err,res){
+        					expid = res;
+        				});
+						
+						console.log(i+"-"+time+"-"+lock+"-"+userid+"-"+expid);
+						JSONData.push({
 							"id": i, 
 							"time": list.get("tb_id:"+i+":time"),
 							"lock": list.get("tb_id:"+i+":locked"),
@@ -149,7 +170,7 @@ socket.configure(function () {
 					}
 					
 					// emit results
-					client.emit("postblocks",  JSONData );*/
+					client.emit("postblocks",  JSONData );
         			break;
         		case "writeblocks":
         			// convert dates and get block ids
