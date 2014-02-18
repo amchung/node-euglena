@@ -90,8 +90,8 @@ socket.configure(function () {
         			console.log(beginT);
         			console.log(endT);
         			
-        			var begintime = Date.UTC(year(beginT),month(beginT),date(beginT),hour(beginT));
-					var endtime = Date.UTC(year(endT),month(endT),date(endT),hour(endT));
+        			var begintime = Date.UTC(beginT.getUTCFullYear(),beginT.getUTCMonth(),beginT.getUTCDate(),beginT.getUTCHours());
+					var endtime = Date.UTC(endT.getUTCFullYear(),endT.getUTCMonth(),endT.getUTCDate(),endT.getUTCHours());
 					
 					console.log(begintime);
         			console.log(endtime);
