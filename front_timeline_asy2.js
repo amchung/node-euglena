@@ -11,14 +11,14 @@ var redis = require('redis');
 //var client = redis.createClient();
 
 var io = require('socket.io');
-var socket  = io.listen(server);
+/*var socket  = io.listen(server);
 
 socket.configure(function () {
   //socket.set("transports", ["xhr-polling"]);
   //socket.set("polling duration", 10);
   //socket.set("close timeout", 10);
   socket.set("log level", 1);
-});
+});*/
 
 var list = redis.createClient();
 var _ = require('underscore');
