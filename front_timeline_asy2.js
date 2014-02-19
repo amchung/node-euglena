@@ -21,6 +21,7 @@ socket.configure(function () {
 });*/
 
 var list = redis.createClient();
+var client = redis.createClient();
 var _ = require('underscore');
 var rooms = ['arduino','lab'];
 
@@ -147,7 +148,7 @@ io.sockets.on('connection', function(socket) {
 							//console.log(res[3]);
 							console.log( _.toArray(res)[0] );
 							// emit results
-							socket.emit('postblocks',  _.toArray(res) );
+							io.sockets.socket(socket.id).emit('postblocks',  _.toArray(res) );
 						}
 					});
 				}
