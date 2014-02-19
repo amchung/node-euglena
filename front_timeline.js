@@ -7,14 +7,14 @@ var express = require('express'),
 	
 var app = express();
 
-const redis = require('redis');
-const client = redis.createClient();
+var redis = require('redis');
+var client = redis.createClient();
 
-const io = require('socket.io');
+var io = require('socket.io');
 
-const list = redis.createClient();
+var list = redis.createClient();
 
-const _ = require('underscore');
+var _ = require('underscore');
 
 if (!module.parent) {
     server.listen(PORT, HOST);
