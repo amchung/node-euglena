@@ -146,7 +146,10 @@ socket.configure(function () {
 							if(err){
 								console.log("error: "+err);
 							}else{
-								//console.log(res[0]);
+								console.log(res[0]);
+								console.log(res[1]);
+								console.log(res[2]);
+								console.log(res[3]);
 								// emit results
 								client.emit("postblocks",  res );
 							}
