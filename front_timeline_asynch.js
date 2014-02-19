@@ -152,7 +152,7 @@ socket.on('connection', function(client) {
 								//console.log(res[3]);
 								console.log( _.toArray(res)[0] );
 								// emit results
-								client.emit("postblocks",  _.toArray(res) );
+								client.emit('postblocks',  _.toArray(res) );
 							}
 						});
         			}

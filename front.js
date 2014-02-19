@@ -8,7 +8,7 @@ var express = require('express'),
 var app = express();
 
 const redis = require('redis');
-const client = redis.createClient();
+//const client = redis.createClient();
 
 const io = require('socket.io');
 
