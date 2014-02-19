@@ -58,7 +58,7 @@ socket.configure(function () {
 						var lists=_.groupBy(members,function(a,b){
 							return Math.floor(b/2);
 						});
-						console.log( _.toArray(lists) );
+						//console.log( _.toArray(lists) );
 						client.emit("postscore",  _.toArray(lists) );
 					});
   					break;
