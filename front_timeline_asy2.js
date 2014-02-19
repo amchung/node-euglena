@@ -146,9 +146,8 @@ io.sockets.on('connection', function(socket) {
 							//console.log(res[1]);
 							//console.log(res[2]);
 							//console.log(res[3]);
-							console.log( _.toArray(res)[0] );
+							console.log( _.zip(res) );
 							// emit results
-							socket.send('Hello~');
 							socket.emit('postblocks',  _.toArray(res) );
 						}
 					});
