@@ -82,7 +82,10 @@ socket.configure(function () {
         
         client.on('timeline',function(msg){
         	// get max limit
-        	var timeline_end = list.get("global:next_tb_id");
+        	var timeline_end;
+        	list.get("global:next_tb_id", function(err,res){
+        		timeline_end =res;
+        	});
         	console.log(timeline_end);
         	
         	switch(msg.type)
