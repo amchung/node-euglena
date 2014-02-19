@@ -81,46 +81,44 @@ socket.configure(function () {
         });
         
         client.on('timeline',function(msg){
-        	// get max limit
-        	var timeline_end;
-        	list.get('global:next_tb_id', function(err,res){
-			if (err){
-				console.log("error: "+err);
-			}
-        		timeline_end =res;
-			console.log(timeline_end);
-        	});
-        	
-        	
         	switch(msg.type)
         	{
         		case "callblocks":
+        			// get max limit
+        			var timeline_end;
+					list.get('global:next_tb_id', function(err,res){
+					if (err){
+						console.log("error: "+err);
+					}
+						timeline_end =res;
+						
+					});
+					
         			// convert dates and get block ids
         			var beginT = new Date(msg.begintime);
         			var endT = new Date(msg.endtime);
         			
-        			console.log(msg.begintime);
-        			console.log(msg.endtime);
-        			console.log(beginT);
-        			console.log(endT);
+        			//console.log(msg.begintime);
+        			//console.log(msg.endtime);
+        			//console.log(beginT);
+        			//console.log(endT);
         			
-        			var begintime = beginT.getTime();
-					var endtime = endT.getTime();
+        			//var begintime = beginT.getTime();
+					//var endtime = endT.getTime();
 					
-				console.log(begintime);
+					console.log(begintime);
         			console.log(endtime);
         			
         			var firstid;
         			list.get("tb_time:"+begintime+":tb_id", function(err,res){
         				firstid = res;
+        				console.log("looking up : block # "+firstid);
         			});
         			var lastid;
         			list.get("tb_time:"+endtime+":tb_id", function(err,res){
         				lastid = res;
+        				console.log(" ~  block # " +lastid);
         			});
-        			
-        			console.log("looking up : block # "+firstid);
-        			console.log(" ~  block # " +lastid);
         			
         			// if out of range
         			if (firstid == null){
