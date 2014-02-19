@@ -18,7 +18,8 @@ var _ = require('underscore');
 
 if (!module.parent) {
     server.listen(PORT, HOST);
-    const socket  = io.listen(server);
+
+const socket  = io.listen(server);
 
 var rooms = ['arduino','lab'];
 
@@ -29,7 +30,7 @@ socket.configure(function () {
   socket.set("log level", 1);
 });
 
-socket.on('connection', function(client) {
+socket.on('connection', function(socket) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
         const pub = redis.createClient();
@@ -39,18 +40,18 @@ socket.on('connection', function(client) {
 				return Math.floor(b/2);
 			});
 			console.log( _.toArray(lists) );
-			client.emit("postscore",  _.toArray(lists) );
+			socket.emit("postscore",  _.toArray(lists) );
 		});
  
         sub.on("message", function(channel, message) {
-            client.send(message);
+            socket.send(message);
         });
         
-        client.on('message', function(msg) {
+        socket.on('message', function(msg) {
         	switch(msg.type)
 			{
 				case "setUsername":
-  					pub.publish("realtime", "1&&"+"A New Challenger Enters the Ring:" + client.id +"  =  "+ msg.user);
+  					pub.publish("realtime", "1&&"+"A New Challenger Enters the Ring:" + socket.id +"  =  "+ msg.user);
   					break;
 				case "sendscore":
   					list.zadd("myset", msg.score , msg.user);
@@ -59,7 +60,7 @@ socket.on('connection', function(client) {
 							return Math.floor(b/2);
 						});
 						//console.log( _.toArray(lists) );
-						client.emit("postscore",  _.toArray(lists) );
+						socket.emit("postscore",  _.toArray(lists) );
 					});
   					break;
   				case "chat":
@@ -76,11 +77,11 @@ socket.on('connection', function(client) {
 			}
         });
         
-        client.on("error", function (err) {
+        socket.on("error", function (err) {
         	console.log("Error "+err);
         });
         
-        client.on('timeline',function(msg){
+        socket.on('timeline',function(msg){
         	switch(msg.type)
         	{
         		case "callblocks":
@@ -152,7 +153,7 @@ socket.on('connection', function(client) {
 								//console.log(res[3]);
 								console.log( _.toArray(res)[0] );
 								// emit results
-								client.emit('postblocks',  _.toArray(res) );
+								socket.emit('postblocks',  _.toArray(res) );
 							}
 						});
         			}
@@ -172,9 +173,9 @@ socket.on('connection', function(client) {
         	}
         });
         
-        client.on('disconnect', function() {
+        socket.on('disconnect', function() {
             sub.quit();
-            pub.publish("realtime","Disconnected :" + client.id);
+            pub.publish("realtime","Disconnected :" + socket.id);
         });
     });
 }
