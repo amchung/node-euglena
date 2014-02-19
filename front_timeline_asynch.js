@@ -8,7 +8,7 @@ var express = require('express'),
 var app = express();
 
 var redis = require('redis');
-var client = redis.createClient();
+//var client = redis.createClient();
 
 var io = require('socket.io');
 
@@ -39,7 +39,7 @@ socket.configure(function () {
 				return Math.floor(b/2);
 			});
 			console.log( _.toArray(lists) );
-			socket.emit("postscore",  _.toArray(lists) );
+			client.emit("postscore",  _.toArray(lists) );
 		});
  
         sub.on("message", function(channel, message) {
@@ -59,7 +59,7 @@ socket.configure(function () {
 							return Math.floor(b/2);
 						});
 						//console.log( _.toArray(lists) );
-						socket.emit("postscore",  _.toArray(lists) );
+						client.emit("postscore",  _.toArray(lists) );
 					});
   					break;
   				case "chat":
@@ -152,7 +152,7 @@ socket.configure(function () {
 								//console.log(res[3]);
 								console.log( _.toArray(res) );
 								// emit results
-								socket.emit("postblocks",  _.toArray(res) );
+								client.emit("postblocks",  _.toArray(res) );
 							}
 						});
         			}
