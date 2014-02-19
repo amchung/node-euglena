@@ -29,7 +29,7 @@ socket.configure(function () {
   socket.set("log level", 1);
 });
 
-    socket.on('connection', function(client) {
+socket.on('connection', function(client) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
         const pub = redis.createClient();
@@ -150,9 +150,9 @@ socket.configure(function () {
 								//console.log(res[1]);
 								//console.log(res[2]);
 								//console.log(res[3]);
-								console.log( _.toArray(res) );
+								console.log( _.toArray(res)[0] );
 								// emit results
-								client.emit("postblocks",  _.toArray(res) );
+								client.emit("postblocks",  _.toArray(res)[0] );
 							}
 						});
         			}
