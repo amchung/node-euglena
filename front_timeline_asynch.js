@@ -110,7 +110,14 @@ socket.configure(function () {
         			//console.log(endtime);
         			
         			var firstid;
+        			var lastid;
+        			var commands = [];
+        			var JSONData = [];
+        			
         			list.get("tb_time:"+begintime+":tb_id", function(err,res){
+        				if (err){
+							console.log("error: "+err);
+						}
         				firstid = res;
         				// if out of range
         				if (firstid == null){
@@ -118,75 +125,49 @@ socket.configure(function () {
         					lastid = firstid + (3*60/5);
         				}
         				console.log("looking up : block # "+firstid);
+        				
+        				list.get("tb_time:"+endtime+":tb_id", function(err,res){
+							if (err){
+								console.log("error: "+err);
+							}
+							lastid = res;
+							// if out of range
+							if (lastid == null)
+							{
+								lastid = timeline_end;
+								firstid = lastid - (3*60/5);
+							}
+							console.log(" ~  block # " +lastid);
+							
+							runCommands(firstid, lastid);
+						});
         			});
         			
-        			var lastid;
-        			list.get("tb_time:"+endtime+":tb_id", function(err,res){
-        				lastid = res;
-        				// if out of range
-        				if (lastid == null)
-        				{
-        					lastid = timeline_end;
-        					firstid = lastid - (3*60/5);
-        				}
-        				console.log(" ~  block # " +lastid);
-        			});
-        			
-        			list.multi(commands).exec(function (err, res) {
-						if(err){
-							process.nextTick(function(){
-								callback(err,null)
-							})
-						}else{
-							process.nextTick(function(){
-								callback(null,res)
-							})
+        			function runCommands(first, last){
+        				for (var i=first;i<=last;i++){
+							commands.push(["get","tb_id:"+i+":time"]);
+							commands.push(["get","tb_id:"+i+":locked"]);
+							commands.push(["get","tb_id:"+i+":userid"]);
+							commands.push(["get","tb_id:"+i+":expid"]);
 						}
-					});
-					
-        			var JSONData = [];
-        			// get blocks
-        			for (var i=firstid;i<=lastid;i++){
-        				
-        				/*var block;
-        				block.id = i;
-						block.time = list.get("tb_id:"+i+":time");
-						block.lock = list.get("tb_id:"+i+":locked");
-						block.userid = list.get("tb_id:"+i+":userid");
-						block.expid = list.get("tb_id:"+i+":expid");*/
-						
-						var time;
-        				list.get("tb_id:"+i+":time", function(err,res){
-        					time = res;
-        				});
-        				
-        				var lock;
-        				list.get("tb_id:"+i+":locked", function(err,res){
-        					lock = res;
-        				});
-						
-						var userid;
-        				list.get("tb_id:"+i+":userid", function(err,res){
-        					userid = res;
-        				});
-        				
-        				var expid;
-        				list.get("tb_id:"+i+":expid", function(err,res){
-        					expid = res;
-        				});
-						
-						console.log(i+"-"+time+"-"+lock+"-"+userid+"-"+expid);
-						JSONData.push({
+						list.multi(commands).exec(function (err, res) {
+							if(err){
+								console.log("error: "+err);
+							}else{
+								JSONData = res;
+								console.log(JSONData[0]);
+								// emit results
+								//client.emit("postblocks",  JSONData );
+							}
+						});
+        			}
+						/*JSONData.push({
 							"id": i, 
 							"time": list.get("tb_id:"+i+":time"),
 							"lock": list.get("tb_id:"+i+":locked"),
 							"userid": list.get("tb_id:"+i+":userid"),
 							"expid": list.get("tb_id:"+i+":expid")
-							});
-					}
-					
-					// emit results
-					client.emit("postblocks",  JSONData );
+							});*/
         			break;
         		case "writeblocks":
         			// convert dates and get block ids
