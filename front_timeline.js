@@ -103,8 +103,8 @@ socket.configure(function () {
         			//console.log(beginT);
         			//console.log(endT);
         			
-        			//var begintime = beginT.getTime();
-					//var endtime = endT.getTime();
+        			var begintime = beginT.getTime();
+					var endtime = endT.getTime();
 					
 					console.log(begintime);
         			console.log(endtime);
