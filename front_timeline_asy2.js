@@ -148,7 +148,8 @@ io.sockets.on('connection', function(socket) {
 							//console.log(res[3]);
 							console.log( _.toArray(res)[0] );
 							// emit results
-							io.sockets.socket(socket.id).emit('postblocks',  _.toArray(res) );
+							socket.send('Hello~');
+							socket.emit('postblocks',  _.toArray(res) );
 						}
 					});
 				}
