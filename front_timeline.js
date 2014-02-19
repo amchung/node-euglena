@@ -106,33 +106,31 @@ socket.configure(function () {
         			var begintime = beginT.getTime();
 					var endtime = endT.getTime();
 					
-					console.log(begintime);
-        			console.log(endtime);
+					//console.log(begintime);
+        			//console.log(endtime);
         			
         			var firstid;
         			list.get("tb_time:"+begintime+":tb_id", function(err,res){
         				firstid = res;
+        				// if out of range
+        				if (firstid == null){
+        					firstid = 0;
+        					lastid = firstid + (3*60/5);
+        				}
         				console.log("looking up : block # "+firstid);
         			});
+        			
         			var lastid;
         			list.get("tb_time:"+endtime+":tb_id", function(err,res){
         				lastid = res;
+        				// if out of range
+        				if (lastid == null)
+        				{
+        					lastid = timeline_end;
+        					firstid = lastid - (3*60/5);
+        				}
         				console.log(" ~  block # " +lastid);
         			});
-        			
-        			// if out of range
-        			if (firstid == null){
-        				firstid = 0;
-        				lastid = firstid + (3*60/5);
-        			}
-        			if (lastid == null)
-        			{
-        				lastid = timeline_end;
-        				firstid = lastid - (3*60/5);
-        			}
-        			console.log(firstid);
-        			console.log(lastid);
-        			
         			
         			var JSONData = [];
         			// get blocks
