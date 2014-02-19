@@ -39,7 +39,7 @@ socket.configure(function () {
 				return Math.floor(b/2);
 			});
 			console.log( _.toArray(lists) );
-			client.emit("postscore",  _.toArray(lists) );
+			socket.emit("postscore",  _.toArray(lists) );
 		});
  
         sub.on("message", function(channel, message) {
@@ -59,7 +59,7 @@ socket.configure(function () {
 							return Math.floor(b/2);
 						});
 						//console.log( _.toArray(lists) );
-						client.emit("postscore",  _.toArray(lists) );
+						socket.emit("postscore",  _.toArray(lists) );
 					});
   					break;
   				case "chat":
@@ -152,7 +152,7 @@ socket.configure(function () {
 								//console.log(res[3]);
 								console.log( _.toArray(res) );
 								// emit results
-								client.emit("postblocks",  _.toArray(res) );
+								socket.emit("postblocks",  _.toArray(res) );
 							}
 						});
         			}
