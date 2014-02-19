@@ -10,7 +10,7 @@ var server = app.listen(PORT, HOST);
 var redis = require('redis');
 //var client = redis.createClient();
 
-var io = require('socket.io');
+var io = require('socket.io').listen(server);
 /*var socket  = io.listen(server);
 
 socket.configure(function () {
