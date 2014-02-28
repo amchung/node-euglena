@@ -16,6 +16,9 @@ var list = redis.createClient();
 
 var _ = require('underscore');
 
+// server_clock
+var now = new Date();
+
 if (!module.parent) {
     server.listen(PORT, HOST);
 
@@ -173,36 +176,39 @@ if (!module.parent) {
         	}
         });
         
+        socket.on('lookclock', function(){
+        	socket.emit('server_clock',now.getMinutes()+":"+now.getSeconds());
+        });
+        
         socket.on('disconnect', function() {
             sub.quit();
             pub.publish("realtime","Disconnected :" + socket.id);
         });
-          
-		//////////////////////////////////////////////
-		//     server clock functions
-
-		var myVar;
-		onclock(one_tick);
-		var now = new Date();
-
-		function onclock(cb) {
-			(function loop() {
-				var now = new Date();
-			//console.log(now.getHours()+":"+now.getMinutes()+":"+now.getSeconds());
-				//if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
-			socket.emit('server_clock',"tic");        
-			if (now.getSeconds() === 0){
-					cb(now);
-				}
-				now = new Date();                  // allow for time passing
-				var delay = 1000 - (now % 1000); // exact ms to next minute interval
-				setTimeout(loop, delay);
-			})();
-		}
-
-		function one_tick(now){
-			console.log("tic!!");
-		}
-		//////////////////////////////////////////////
     });
+    
+	 //////////////////////////////////////////////
+	//  server clock functions
+
+	onclock(one_tick);
+
+	function onclock(cb) {
+		(function loop() {
+			now = new Date();
+		//console.log(now.getHours()+":"+now.getMinutes()+":"+now.getSeconds());
+			//if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
+		//socket.emit('server_clock',"tic");        
+		if (now.getSeconds() === 0){
+				cb(now);
+			}
+			now = new Date();                  // allow for time passing
+			var delay = 1000 - (now % 1000); // exact ms to next minute interval
+			setTimeout(loop, delay);
+		})();
+	}
+
+	function one_tick(now){
+		console.log("!!!TIC!!!");
+	}
+	                                             //
+	//////////////////////////////////////////////
 }
