@@ -19,18 +19,18 @@ var _ = require('underscore');
 if (!module.parent) {
     server.listen(PORT, HOST);
 
-const socket  = io.listen(server);
+	const socket  = io.listen(server);
 
-var rooms = ['arduino','lab'];
+	var rooms = ['arduino','lab'];
 
-socket.configure(function () {
-  //socket.set("transports", ["xhr-polling"]);
-  //socket.set("polling duration", 10);
-  //socket.set("close timeout", 10);
-  socket.set("log level", 1);
-});
+	socket.configure(function () {
+	  //socket.set("transports", ["xhr-polling"]);
+	  //socket.set("polling duration", 10);
+	  //socket.set("close timeout", 10);
+	  socket.set("log level", 1);
+	});
 
-socket.on('connection', function(socket) {
+	socket.on('connection', function(socket) {
         const sub = redis.createClient();
         sub.subscribe('realtime');
         const pub = redis.createClient();
@@ -177,32 +177,32 @@ socket.on('connection', function(socket) {
             sub.quit();
             pub.publish("realtime","Disconnected :" + socket.id);
         });
+          
+		//////////////////////////////////////////////
+		//     server clock functions
+
+		var myVar;
+		onclock(one_tick);
+		var now = new Date();
+
+		function onclock(cb) {
+			(function loop() {
+				var now = new Date();
+			//console.log(now.getHours()+":"+now.getMinutes()+":"+now.getSeconds());
+				//if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
+			socket.emit('server_clock',"tic");        
+			if (now.getSeconds() === 0){
+					cb(now);
+				}
+				now = new Date();                  // allow for time passing
+				var delay = 1000 - (now % 1000); // exact ms to next minute interval
+				setTimeout(loop, delay);
+			})();
+		}
+
+		function one_tick(now){
+			console.log("tic!!");
+		}
+		//////////////////////////////////////////////
     });
-    
-    //////////////////////////////////////////////
-	//     server clock functions
-
-	var myVar;
-	onclock(one_tick);
-	var now = new Date();
-
-	function onclock(cb) {
-		(function loop() {
-			var now = new Date();
-		//console.log(now.getHours()+":"+now.getMinutes()+":"+now.getSeconds());
-			//if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
-		socket.emit('server_clock',"tic");        
-		if (now.getSeconds() === 0){
-				cb(now);
-			}
-			now = new Date();                  // allow for time passing
-			var delay = 1000 - (now % 1000); // exact ms to next minute interval
-			setTimeout(loop, delay);
-		})();
-	}
-
-	function one_tick(now){
-		console.log("tick");
-	}
-	//////////////////////////////////////////////
 }
