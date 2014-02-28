@@ -192,7 +192,7 @@ function onclock(cb) {
         var now = new Date();
 	//console.log(now.getHours()+":"+now.getMinutes()+":"+now.getSeconds());
         //if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
-	socket.emit('server_clock',"tic");        
+	socket.emit('server_clock',now);        
 	if (now.getSeconds() === 0){
             cb(now);
         }
