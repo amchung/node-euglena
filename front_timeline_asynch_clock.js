@@ -177,7 +177,14 @@ if (!module.parent) {
         });
         
         socket.on('lookclock', function(){
-        	socket.emit('server_clock',now.getMinutes()+":"+now.getSeconds());
+        	function display(date){
+				var m = date.getMinutes();
+				m=("0" + m).slice(-2);
+				var s = date.getSeconds();
+				s=("0" + s).slice(-2);
+				return m+":"+s;
+			}
+        	socket.emit('server_clock',display(now));
         });
         
         socket.on('disconnect', function() {
