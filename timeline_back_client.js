@@ -11,7 +11,7 @@ var myClock;
 socket.on('connect', function() {
 	console.log("Connected to front server..");
 	socket.emit('lookclock');
-	myClock=setInterval(function(){myTimer()},500);
+	myClock=setInterval(function(){myTimer()},1000);
 });
 
 function myTimer(){
