@@ -27,7 +27,7 @@ socket.on('tic', function(data){
 });
 
 socket.on('snapshot', function(data){
-	var current_block_id = data;
+	current_block_id = data;
   	var imgpath = takeSnapshot();
   	console.log(current_block_id);
 });
