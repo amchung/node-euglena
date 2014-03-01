@@ -238,6 +238,7 @@ function markTimeblock(){
 	var start = Date.UTC(2014,02,11,0);
 	//var end = Date.UTC(2014,07,01,0);
 	var end = new Date();
+	end = end.getTime();
 	var blocks = (end-start)/block;
 	
 	console.log(start);
