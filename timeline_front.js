@@ -291,6 +291,6 @@ function markTimeblock(){
 	current_block_id = blocks;
 	current_block_record = list.get("tb_id:"+current_block_id+":locked");
 	console.log("current block id:"+current_block_id);
-	console.log("current block needs recording:"+currnet_block_record);
+	console.log("current block needs recording:"+current_block_record);
 }
 
