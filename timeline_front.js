@@ -223,7 +223,7 @@ if (!module.parent) {
 		//socket.emit('server_clock',"tic");        
 		if (now.getSeconds() === 0){
 				if (now.getMinutes()%5 == 3){
-					pub.publish("img_recorder", "0&&"+current_block_id);
+					pub.publish("realtime", "0&&"+current_block_id);
 					lock_current_block();
 				}
 				if (now.getMinutes()%5 == 0){
