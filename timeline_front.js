@@ -209,10 +209,10 @@ if (!module.parent) {
 			var s = now.getSeconds();
         	if(current_block_record){
         		if((s==0)&&(m%5==0))
-        		{socket.emit('recordblock',current_block);}
+        		{socket.emit('recordblock',current_block_id);}
         	}else{
         		if((s==0))
-        		{socket.emit('snapshot',currnet_block);}
+        		{socket.emit('snapshot',currnet_block_id);}
         	}
         });
         
@@ -250,11 +250,11 @@ if (!module.parent) {
 
 	function one_block(now){
      	//take a snapshot, image = image_dir
-     	
      	list.set("tb_id:"+current_block_id+":past", 1);
      	console.log("bye bye block "+current_block_id);
      	current_block_id = current_block_id+1;
      	list.set("tb_id:"+current_block_id+":current",1);
+     	current_block_record = list.get("tb_id:"+current_block_id+":locked");
      	console.log("hello block "+current_block_id);
      	
      	//reload blocks
@@ -289,5 +289,8 @@ function markTimeblock(){
 	}
 	list.set("tb_id:"+(blocks)+":current",1);
 	current_block_id = blocks;
+	current_block_record = list.get("tb_id:"+current_block_id+":locked");
+	console.log("current block id:"+current_block_id);
+	console.log("current block needs recording:"+currnet_block_record);
 }
 
