@@ -163,7 +163,8 @@ if (!module.parent) {
 								//console.log(res[1]);
 								//console.log(res[2]);
 								//console.log(res[3]);
-								console.log( _.toArray(res)[0] );
+								console.log("Array: "+res[0]);
+								console.log( "_Array: "_.toArray(res)[0] );
 								// emit results
 								socket.emit('postblocks',  _.toArray(res) );
 							}
@@ -189,9 +190,9 @@ if (!module.parent) {
         	function display(date){
         		// display 5 min countdown
 				var m = date.getMinutes();
-				m="0" + (5-m%5);
+				m="0" + (4-m%5);
 				var s = date.getSeconds();
-				s=("0" + (60-s)).slice(-2);
+				s=("0" + (60-s%60)).slice(-2);
 				return m+":"+s;
 			}
         	socket.emit('server_clock',display(now));
