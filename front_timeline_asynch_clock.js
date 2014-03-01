@@ -235,8 +235,7 @@ if (!module.parent) {
 
 function markTimeblock(){
 	var block = 5*60*1000;
-	var start = Date.UTC(2014,01,11,0);
-	//var end = Date.UTC(2014,07,01,0);
+	var start = Date.UTC(2014,02,1);
 	var end = new Date();
 	end = end.getTime();
 	var blocks = Math.floor((end-start)/block);
