@@ -8,8 +8,8 @@ console.log("Populate time block DB: STARTED");
 //for every 5min time block
 
 var block = 5*60*1000;
-var start = Date.UTC(2014,02,01,0); // Mar 1
-var end = Date.UTC(2014,06,01,0); // July 1
+var start = Date.UTC(2014,02,1); // Mar 1 GMT
+var end = Date.UTC(2014,06,1); // July 1 GMT
 var blocks = (end-start)/block;
 
 	/*
