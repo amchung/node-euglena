@@ -149,11 +149,11 @@ if (!module.parent) {
 							commands.push(["get","tb_id:"+i+":locked"]);
 							commands.push(["get","tb_id:"+i+":user_id"]);
 							commands.push(["get","tb_id:"+i+":exp_id"]);
-							//commands.push(["get","tb_id:"+i+":pattern_id"]);
-							//commands.push(["get","tb_id:"+i+":past"]);
-							//commands.push(["get","tb_id:"+i+":admin"]);
-							//commands.push(["get","tb_id:"+i+":current"]);
-							//commands.push(["get","tb_id:"+i+":image"]);
+							commands.push(["get","tb_id:"+i+":pattern_id"]);
+							commands.push(["get","tb_id:"+i+":past"]);
+							commands.push(["get","tb_id:"+i+":admin"]);
+							commands.push(["get","tb_id:"+i+":current"]);
+							commands.push(["get","tb_id:"+i+":image"]);
 						}
 						list.multi(commands).exec(function (err, res) {
 							if(err){
@@ -240,6 +240,7 @@ if (!module.parent) {
 
 
 function markTimeblock(){
+	var redis_client = redis.createClient();
 	var block = 5*60*1000;
 	var start = Date.UTC(2014,02,1);
 	var end = new Date();
@@ -268,8 +269,8 @@ function markTimeblock(){
      SET tb_id:1000:image -1*/
      
 	for (var i=0;i<(blocks-1);i++) {
-		list.set("tb_id:"+i+":locked", 1);
-		list.set("tb_id:"+i+":past", 1);
+		redis_client.set("tb_id:"+i+":locked", 1);
+		redis_client.set("tb_id:"+i+":past", 1);
 	}
-	list.set("tb_id:"+(blocks)+":current",1);
+	redis_client.set("tb_id:"+(blocks)+":current",1);
 }
