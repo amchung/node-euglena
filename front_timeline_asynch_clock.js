@@ -190,8 +190,12 @@ if (!module.parent) {
         	function display(date){
         		// display 5 min countdown
 				var m = date.getMinutes();
-				m="0" + (5-m%5)%5;
 				var s = date.getSeconds();
+				if (s>1){
+					m=(5-m%5);
+				}else{
+					m=(5-m%5)+1;
+				}
 				s=("0" + (60-s%60)%60).slice(-2);
 				return m+":"+s;
 			}
