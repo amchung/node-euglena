@@ -149,11 +149,11 @@ if (!module.parent) {
 							commands.push(["get","tb_id:"+i+":locked"]);
 							commands.push(["get","tb_id:"+i+":user_id"]);
 							commands.push(["get","tb_id:"+i+":exp_id"]);
-							commands.push(["get","tb_id:"+i+":pattern_id"]);
-							commands.push(["get","tb_id:"+i+":past"]);
-							commands.push(["get","tb_id:"+i+":admin"]);
-							commands.push(["get","tb_id:"+i+":current"]);
-							commands.push(["get","tb_id:"+i+":image"]);
+							//commands.push(["get","tb_id:"+i+":pattern_id"]);
+							//commands.push(["get","tb_id:"+i+":past"]);
+							//commands.push(["get","tb_id:"+i+":admin"]);
+							//commands.push(["get","tb_id:"+i+":current"]);
+							//commands.push(["get","tb_id:"+i+":image"]);
 						}
 						list.multi(commands).exec(function (err, res) {
 							if(err){
@@ -190,9 +190,9 @@ if (!module.parent) {
         	function display(date){
         		// display 5 min countdown
 				var m = date.getMinutes();
-				m="0" + (4-m%5);
+				m="0" + (5-m%5)%5;
 				var s = date.getSeconds();
-				s=("0" + (60-s%60)).slice(-2);
+				s=("0" + (60-s%60)%60).slice(-2);
 				return m+":"+s;
 			}
         	socket.emit('server_clock',display(now));
