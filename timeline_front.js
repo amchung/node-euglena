@@ -17,6 +17,7 @@ var list = redis.createClient();
 var _ = require('underscore');
 
 var current_block_id;
+var current_block_record;
 
 markTimeblock();
 
@@ -203,6 +204,18 @@ if (!module.parent) {
         	socket.emit('server_clock',display(now));
         });
         
+        socket.on('lookimgclock', function(){
+        	var m = now.getMinutes();
+			var s = now.getSeconds();
+        	if(current_block_record){
+        		if((s==0)&&(m%5==0))
+        		{socket.emit('recordblock',current_block);}
+        	}else{
+        		if((s==0))
+        		{socket.emit('snapshot',currnet_block);}
+        	}
+        });
+        
         socket.on('disconnect', function() {
             sub.quit();
             pub.publish("realtime","Disconnected :" + socket.id);
@@ -223,7 +236,6 @@ if (!module.parent) {
 		//socket.emit('server_clock',"tic");        
 		if (now.getSeconds() === 0){
 				if (now.getMinutes()%5 == 3){
-					pub.publish("realtime", "0&&"+current_block_id);
 					lock_current_block();
 				}
 				if (now.getMinutes()%5 == 0){

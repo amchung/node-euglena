@@ -6,23 +6,41 @@ var http = require('http');
 const redis = require('redis');
 const list = redis.createClient();
 
+var current_block_id;
 var myClock;
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
-	socket.emit('lookclock');
-	myClock=setInterval(function(){myTimer()},1000);
+	socket.emit('lookimgclock');
+	myClock=setInterval(function(){myTimer()},500);
 });
 
 function myTimer(){
 	socket.emit('lookclock');
+	if 
+	socket.emit('lookblock');
 }
 
-socket.on('server_clock', function(data){
+/*socket.on('recordblock', function(data){
   	console.log(data);
+  	current_block_id = data;
+  	var locked = list.get("tb_id:"+current_block_id+":locked");
+  	if (locked){
+  		// record whole block
+  	}else{
+  		
+  	}
+});*/
+
+socket.on('snapshot', function(data){
+	var current_block_id = data;
+  	var imgpath = takeSnapshot();
+	console.log("tb_id:"+current_block_id+":image");
+	console.log(imgpath);
+	list.set("tb_id:"+current_block_id+":image",imgpath);
 });
 
-
+/*
 socket.on('message', function(msg) {
 	var d = new Date().getTime();
 	//list.zadd("image_log", d , msg);
@@ -43,7 +61,7 @@ socket.on('message', function(msg) {
   				// recording the entire block
   			break;
 		}
-});
+});*/
 
 socket.on('disconnect', function(client) {
 	console.log("Disconnected!!!");
