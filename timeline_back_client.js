@@ -1,6 +1,7 @@
 var io = require('socket.io-client');
 var socket = new io.connect("http://171.65.102.132:3006");
 var fs  = require('fs');
+var http = require('http');
 
 const redis = require('redis');
 const list = redis.createClient();
