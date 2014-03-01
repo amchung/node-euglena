@@ -11,14 +11,11 @@ var myClock;
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
-	socket.emit('lookimgclock');
 	myClock=setInterval(function(){myTimer()},500);
 });
 
 function myTimer(){
-	socket.emit('lookclock');
-	if 
-	socket.emit('lookblock');
+	socket.emit('lookimgclock');
 }
 
 /*socket.on('recordblock', function(data){
