@@ -288,6 +288,7 @@ function markTimeblock(){
 	for (var i=0;i<(blocks-1);i++) {
 		list.set("tb_id:"+i+":locked", 1);
 		list.set("tb_id:"+i+":past", 1);
+		list.set("tb_id:"+i+":current", 0);
 	}
 	list.set("tb_id:"+(blocks)+":current",1);
 	current_block_id = blocks;
