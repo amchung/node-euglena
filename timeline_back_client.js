@@ -6,9 +6,22 @@ var http = require('http');
 const redis = require('redis');
 const list = redis.createClient();
 
+var myClock;
+
 socket.on('connect', function() {
 	console.log("Connected to front server..");
+	socket.emit('lookclock');
+	myClock=setInterval(function(){myTimer()},500);
 });
+
+function myTimer(){
+	socket.emit('lookclock');
+}
+
+socket.on('server_clock', function(data){
+  	console.log(data);
+});
+
 
 socket.on('message', function(msg) {
 	var d = new Date().getTime();
