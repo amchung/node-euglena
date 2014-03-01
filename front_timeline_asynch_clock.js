@@ -164,8 +164,8 @@ if (!module.parent) {
 							if(err){
 								console.log("error: "+err);
 							}else{
-								console.log("Results: "+res);
-								console.log( "_Array: " + _.toArray(res)[0] );
+								//console.log("Results: "+res);
+								//console.log( "_Array: " + _.toArray(res)[0] );
 								// emit results
 								socket.emit('postblocks',  _.toArray(res) );
 							}
