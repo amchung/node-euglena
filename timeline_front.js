@@ -252,7 +252,9 @@ if (!module.parent) {
 
 	function one_block(now){
      	//take a snapshot, image = image_dir
+     	list.set("tb_id:"+current_block_id+":locked", 1);
      	list.set("tb_id:"+current_block_id+":past", 1);
+     	list.set("tb_id:"+current_block_id+":current", 0);
      	console.log("bye bye block "+current_block_id);
      	current_block_id = current_block_id+1;
      	list.set("tb_id:"+current_block_id+":current",1);
