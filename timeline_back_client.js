@@ -28,6 +28,9 @@ function myTimer(){
   		
   	}
 });*/
+socket.on('tic', function(data){
+	console.log(data);
+});
 
 socket.on('snapshot', function(data){
 	var current_block_id = data;
