@@ -20,13 +20,7 @@ function myTimer(){
 
 /*socket.on('recordblock', function(data){
   	console.log(data);
-  	current_block_id = data;
-  	var locked = list.get("tb_id:"+current_block_id+":locked");
-  	if (locked){
-  		// record whole block
-  	}else{
-  		
-  	}
+  	current_block_id = data;	
 });*/
 socket.on('tic', function(data){
 	console.log(data);
@@ -35,7 +29,7 @@ socket.on('tic', function(data){
 socket.on('snapshot', function(data){
 	var current_block_id = data;
   	var imgpath = takeSnapshot();
-	console.log("tb_id:"+current_block_id+":image");
+  	console.log(imgpath);
 });
 
 /*
