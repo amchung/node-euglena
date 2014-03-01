@@ -16,6 +16,10 @@ var list = redis.createClient();
 
 var _ = require('underscore');
 
+var timeblock_id;
+
+setCurrentTimeblock();
+
 // server_clock
 var now = new Date();
 
@@ -178,10 +182,11 @@ if (!module.parent) {
         
         socket.on('lookclock', function(){
         	function display(date){
+        		// display 5 min countdown
 				var m = date.getMinutes();
-				m=("0" + m).slice(-2);
+				m="0" + (5-m%5);
 				var s = date.getSeconds();
-				s=("0" + s).slice(-2);
+				s=("0" + (60-s)).slice(-2);
 				return m+":"+s;
 			}
         	socket.emit('server_clock',display(now));
@@ -195,8 +200,9 @@ if (!module.parent) {
     
 	 //////////////////////////////////////////////
 	//  server clock functions
-
-	onclock(one_tick);
+	
+	// every 5 min, handle a block
+	onclock(one_block);
 
 	function onclock(cb) {
 		(function loop() {
@@ -213,9 +219,50 @@ if (!module.parent) {
 		})();
 	}
 
-	function one_tick(now){
-		console.log("!!!TIC!!!");
+	function one_block(now){
+		//console.log("!!!TIC!!!");
+     	//past block: locked = 1, past = 1, take a snapshot, image = image_dir
+     	//current block: current = 1
+     	//reload page
+
+     	//if (timeleft < 1000*60*2) current block: locked = 1
+     	//reload blocks
 	}
 	                                             //
 	//////////////////////////////////////////////
+}
+
+
+function setTimeblock(){
+	var block = 5*60*1000;
+	var start = Date.UTC(2014,02,11,0);
+	//var end = Date.UTC(2014,07,01,0);
+	var end = Date.getTime();
+	var blocks = (end-start)/block;
+	
+	console.log(start);
+	console.log(end);
+	console.log(blocks);
+	/*
+     INCR global:next_tb_id
+     SET tb_id:1000:time UTCtime()
+     SET tb_id:1000:locked 0
+     SET tb_id:1000:user_id -1
+     SET tb_id:1000:exp_id -1
+     SET tb_time:UTCtime:tb_id 1000
+     */
+
+     /*SET global:next_exp_id
+     SET global:next_pattern_id
+     SET tb_id:1000:pattern_id -1
+     SET tb_id:1000:past 0
+     SET tb_id:1000:admin 0
+     SET tb_id:1000:current 0
+     SET tb_id:1000:image -1*/
+     
+	/*for (var i=0;i<blocks;i++) {
+		redis.set("tb_id:"+i+":locked", 1);
+		redis.set("tb_id:"+i+":past", 1);
+	}
+	redis.set("tb_id:"+(blocks+1)+":current",1);*/
 }

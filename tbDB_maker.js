@@ -30,8 +30,9 @@ var blocks = (end-start)/block;
      SET tb_id:1000:image -1*/
      
 for (var i=0;i<blocks;i++) {
+	var time = start + i * block;
+	
 	if (i>31679){
-	 	var time = start + i * block;
 		list.incr("global:next_tb_id");
 		list.set("tb_id:"+i+":time", time);
 		list.set("tb_id:"+i+":locked", 0);
