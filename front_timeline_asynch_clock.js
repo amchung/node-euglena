@@ -147,8 +147,13 @@ if (!module.parent) {
         				for (var i=first;i<=last;i++){
 							commands.push(["get","tb_id:"+i+":time"]);
 							commands.push(["get","tb_id:"+i+":locked"]);
-							commands.push(["get","tb_id:"+i+":userid"]);
-							commands.push(["get","tb_id:"+i+":expid"]);
+							commands.push(["get","tb_id:"+i+":user_id"]);
+							commands.push(["get","tb_id:"+i+":exp_id"]);
+							commands.push(["get","tb_id:"+i+":pattern_id"]);
+							commands.push(["get","tb_id:"+i+":past"]);
+							commands.push(["get","tb_id:"+i+":admin"]);
+							commands.push(["get","tb_id:"+i+":current"]);
+							commands.push(["get","tb_id:"+i+":image"]);
 						}
 						list.multi(commands).exec(function (err, res) {
 							if(err){
@@ -261,9 +266,9 @@ function markTimeblock(){
      SET tb_id:1000:current 0
      SET tb_id:1000:image -1*/
      
-	/*for (var i=0;i<blocks;i++) {
+	for (var i=0;i<(blocks-1);i++) {
 		redis.set("tb_id:"+i+":locked", 1);
 		redis.set("tb_id:"+i+":past", 1);
 	}
-	redis.set("tb_id:"+(blocks+1)+":current",1);*/
+	redis.set("tb_id:"+(blocks)+":current",1);
 }
