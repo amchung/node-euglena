@@ -156,6 +156,7 @@ if (!module.parent) {
 							commands.push(["get","tb_id:"+i+":current"]);
 							commands.push(["get","tb_id:"+i+":image"]);
 						}
+						console.log(commands);
 						list.multi(commands).exec(function (err, res) {
 							if(err){
 								console.log("error: "+err);
