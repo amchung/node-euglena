@@ -82,7 +82,9 @@ function takeSnapshot(){
         	var path = require('path');
         	var file = path.join('../../Dropbox', 'live-gallery', isoDate+".jpg");
             fs.writeFile(file, imagedata, 'binary');
-			list.set("tb_id:"+current_block_id+":image", isoDate+".jpg");
+            var keyname = "tb_id:"+current_block_id+":image";
+            console.log(keyname);
+			list.set(keyname, isoDate+".jpg");
             return isoDate
         });
     }).on('error', function(e) {
