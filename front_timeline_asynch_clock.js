@@ -192,9 +192,9 @@ if (!module.parent) {
 				var m = date.getMinutes();
 				var s = date.getSeconds();
 				if (s>1){
-					m=(5-m%5);
+					m=4-m%5;
 				}else{
-					m=(5-m%5)+1;
+					m=5-m%5;
 				}
 				s=("0" + (60-s%60)%60).slice(-2);
 				return m+":"+s;
