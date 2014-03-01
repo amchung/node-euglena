@@ -15,7 +15,6 @@ var io = require('socket.io');
 var list = redis.createClient();
 
 var _ = require('underscore');
-var fs  = require('fs');
 
 var current_block_id;
 
@@ -223,10 +222,7 @@ if (!module.parent) {
 		//socket.emit('server_clock',"tic");        
 		if (now.getSeconds() === 0){
 				if (now.getMinutes()%5 == 3){
-					var imgpath = takeSnapshot();
-					console.log("tb_id:"+current_block_id+":image");
-					console.log(imgpath);
-					list.set("tb_id:"+current_block_id+":image",imgpath);
+					pub.publish("img_recorder", "0&&"+current_block_id);
 					lock_current_block();
 				}
 				if (now.getMinutes()%5 == 0){
@@ -282,33 +278,3 @@ function markTimeblock(){
 	current_block_id = blocks;
 }
 
-/*******************************************************************************
-  Capture Euglena Live Screen
-*******************************************************************************/
-
-/*var snapshot_t_interval = 1000 * 60 * 10; // every minute
-setInterval(takeSnapshot, snapshot_t_interval);
-takeSnapshot();*/
-
-function takeSnapshot(){
-  var timestamp = new Date().getTime();
-  
-  http.get("http://171.65.102.132:8080/?action=snapshot?t=" + timestamp, function(res) {
-        res.setEncoding('binary');
-        var imagedata = '';
-        res.on('data', function(chunk){
-            imagedata+= chunk; 
-        });
-        res.on('end', function(){
-        	var isoDate = new Date(timestamp).toISOString();
-        	console.log("live-gallery/"+isoDate+".jpg");
-        	var path = require('path');
-        	var file = path.join('../../Dropbox', 'live-gallery', isoDate+".jpg");
-            fs.writeFile(file, imagedata, 'binary');
-            return isoDate
-        });
-    }).on('error', function(e) {
-      		console.log("Got error: " + e.message);
-      		return "err"
-	});
-}
