@@ -163,6 +163,7 @@ if (!module.parent) {
 								//console.log(res[1]);
 								//console.log(res[2]);
 								//console.log(res[3]);
+								console.log("Results: "+res);
 								console.log("Array: "+res[0]);
 								console.log( "_Array: " + _.toArray(res)[0] );
 								// emit results
@@ -251,22 +252,6 @@ function markTimeblock(){
 	console.log(end);
 	console.log((end-start)/block);
 	console.log(blocks);
-	/*
-     INCR global:next_tb_id
-     SET tb_id:1000:time UTCtime()
-     SET tb_id:1000:locked 0
-     SET tb_id:1000:user_id -1
-     SET tb_id:1000:exp_id -1
-     SET tb_time:UTCtime:tb_id 1000
-     */
-
-     /*SET global:next_exp_id
-     SET global:next_pattern_id
-     SET tb_id:1000:pattern_id -1
-     SET tb_id:1000:past 0
-     SET tb_id:1000:admin 0
-     SET tb_id:1000:current 0
-     SET tb_id:1000:image -1*/
      
 	for (var i=0;i<(blocks-1);i++) {
 		redis_client.set("tb_id:"+i+":locked", 1);
