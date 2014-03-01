@@ -15,6 +15,7 @@ var io = require('socket.io');
 var list = redis.createClient();
 
 var _ = require('underscore');
+var fs  = require('fs');
 
 var current_block_id;
 
@@ -222,6 +223,9 @@ if (!module.parent) {
 		//socket.emit('server_clock',"tic");        
 		if (now.getSeconds() === 0){
 				if (now.getMinutes()%5 == 3){
+					var imgpath = takeSnapshot();
+					console.log(imgpath);
+					//list.set("tb_id:"+current_block_id+":image",imgpath);
 					lock_current_block();
 				}
 				if (now.getMinutes()%5 == 0){
@@ -236,17 +240,20 @@ if (!module.parent) {
 
 	function one_block(now){
      	//take a snapshot, image = image_dir
-     	//reload page
-     	//list.set("tb_id:"+current_block_id+":past", 1);
+     	
+     	list.set("tb_id:"+current_block_id+":past", 1);
      	console.log("bye bye block "+current_block_id);
      	current_block_id = current_block_id+1;
-     	//list.set("tb_id:"+current_block_id+":current",1);
+     	list.set("tb_id:"+current_block_id+":current",1);
      	console.log("hello block "+current_block_id);
+     	
+     	//reload blocks
 	}
 	
 	function lock_current_block(){
 		list.set("tb_id:"+current_block_id+":locked", 1);
 		console.log("block "+current_block_id +" locked");
+		
 		//reload blocks
 	}
 	                                             //
@@ -272,4 +279,35 @@ function markTimeblock(){
 	}
 	list.set("tb_id:"+(blocks)+":current",1);
 	current_block_id = blocks;
+}
+
+/*******************************************************************************
+  Capture Euglena Live Screen
+*******************************************************************************/
+
+/*var snapshot_t_interval = 1000 * 60 * 10; // every minute
+setInterval(takeSnapshot, snapshot_t_interval);
+takeSnapshot();*/
+
+function takeSnapshot(){
+  var timestamp = new Date().getTime();
+  
+  http.get("http://171.65.102.132:8080/?action=snapshot?t=" + timestamp, function(res) {
+        res.setEncoding('binary');
+        var imagedata = '';
+        res.on('data', function(chunk){
+            imagedata+= chunk; 
+        });
+        res.on('end', function(){
+        	var isoDate = new Date(timestamp).toISOString();
+        	console.log("live-gallery/"+isoDate+".jpg");
+        	var path = require('path');
+        	var file = path.join('../../Dropbox', 'live-gallery', isoDate+".jpg");
+            fs.writeFile(file, imagedata, 'binary');
+            return isoDate
+        });
+    }).on('error', function(e) {
+      		console.log("Got error: " + e.message);
+      		return "err"
+	});
 }
