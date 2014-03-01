@@ -124,6 +124,7 @@ if (!module.parent) {
 								firstid = 0;
 								lastid = firstid + (3*60/5);
 							}
+							pub.publish("realtime", "1&&"+"looking up : block # "+firstid);
 							console.log("looking up : block # "+firstid);
 						
 							list.get("tb_time:"+endtime+":tb_id", function(err,res){
