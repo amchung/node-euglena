@@ -210,7 +210,8 @@ if (!module.parent) {
         	if(current_block_record){
         		if((s==0)&&(m%5==0)) {socket.emit('recordblock',current_block_id);}
         	}
-        	if((s==0)&&(m%5==3)){
+        	//if((s==0)&&(m%5==3)){
+        	if(s==0){
         		socket.emit('snapshot',current_block_id);
         	}else{
         		socket.emit('tic', m+":"+s);
