@@ -144,8 +144,9 @@ if (!module.parent) {
         			}
         			
         			function runCommands(first, last){
-        			console.log(first+"~"+last);
+        				console.log(first+"~"+last);
         				for (var i=first;i<=last;i++){
+        					console.log("tb_id:"+i+":user_id");
 							commands.push(["get","tb_id:"+i+":time"]);
 							commands.push(["get","tb_id:"+i+":locked"]);
 							commands.push(["get","tb_id:"+i+":user_id"]);
