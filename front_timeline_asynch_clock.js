@@ -144,26 +144,8 @@ if (!module.parent) {
         			}
         			
         			function runCommands(first, last){
+        			console.log(first+"~"+last);
         				for (var i=first;i<=last;i++){
-							commands.push(["get","tb_id:"+i+":time"]);
-							commands.push(["get","tb_id:"+i+":locked"]);
-							commands.push(["get","tb_id:"+i+":userid"]);
-							commands.push(["get","tb_id:"+i+":expid"]);
-						}
-						list.multi(commands).exec(function (err, res) {
-							if(err){
-								console.log("error: "+err);
-							}else{
-								//console.log(res[0]);
-								//console.log(res[1]);
-								//console.log(res[2]);
-								//console.log(res[3]);
-								console.log( _.toArray(res)[0] );
-								// emit results
-								socket.emit('postblocks',  _.toArray(res) );
-							}
-						});
-        				/*for (var i=first;i<=last;i++){
 							commands.push(["get","tb_id:"+i+":time"]);
 							commands.push(["get","tb_id:"+i+":locked"]);
 							commands.push(["get","tb_id:"+i+":user_id"]);
@@ -178,17 +160,12 @@ if (!module.parent) {
 							if(err){
 								console.log("error: "+err);
 							}else{
-								//console.log(res[0]);
-								//console.log(res[1]);
-								//console.log(res[2]);
-								//console.log(res[3]);
 								console.log("Results: "+res);
-								console.log("Array: "+res[0]);
 								console.log( "_Array: " + _.toArray(res)[0] );
 								// emit results
 								socket.emit('postblocks',  _.toArray(res) );
 							}
-						});*/
+						});
         			}
 						/*JSONData.push({
 							"id": i, 
