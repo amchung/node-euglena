@@ -147,6 +147,7 @@ if (!module.parent) {
         				var first = parseInt(firstid);
         				var last = parseInt(lastid);
         				console.log(first+"~"+last);
+        				
         				for (var i=first;i<=last;i++){
         					console.log("tb_id:"+i+":user_id");
 							commands.push(["get","tb_id:"+i+":time"]);
@@ -159,7 +160,6 @@ if (!module.parent) {
 							commands.push(["get","tb_id:"+i+":current"]);
 							commands.push(["get","tb_id:"+i+":image"]);
 						}
-						console.log("commands:"+commands.toString());
 						list.multi(commands).exec(function (err, res) {
 							if(err){
 								console.log("error: "+err);
