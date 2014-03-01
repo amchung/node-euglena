@@ -16,7 +16,7 @@ var list = redis.createClient();
 
 var _ = require('underscore');
 
-var timeblock_id;
+var current_block_id;
 
 markTimeblock();
 
@@ -191,7 +191,7 @@ if (!module.parent) {
         		// display 5 min countdown
 				var m = date.getMinutes();
 				var s = date.getSeconds();
-				if (s>1){
+				if (s>0){
 					m=4-m%5;
 				}else{
 					m=5-m%5;
@@ -221,7 +221,12 @@ if (!module.parent) {
 			//if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
 		//socket.emit('server_clock',"tic");        
 		if (now.getSeconds() === 0){
-				cb(now);
+				if (now.getMinutes()%5 == 3){
+					lock_current_block();
+				}
+				if (now.getMinutes()%5 == 0){
+					cb(now);
+				}
 			}
 			now = new Date();                  // allow for time passing
 			var delay = 1000 - (now % 1000); // exact ms to next minute interval
@@ -230,13 +235,19 @@ if (!module.parent) {
 	}
 
 	function one_block(now){
-		//console.log("!!!TIC!!!");
-     	//past block: locked = 1, past = 1, take a snapshot, image = image_dir
-     	//current block: current = 1
+     	//take a snapshot, image = image_dir
      	//reload page
-
-     	//if (timeleft < 1000*60*2) current block: locked = 1
-     	//reload blocks
+     	//list.set("tb_id:"+current_block_id+":past", 1);
+     	console.log("bye bye block "+current_block_id);
+     	current_block_id = current_block_id+1;
+     	//list.set("tb_id:"+current_block_id+":current",1);
+     	console.log("hello block "+current_block_id);
+	}
+	
+	function lock_current_block(){
+		list.set("tb_id:"+current_block_id+":locked", 1);
+		console.log("block "+current_block_id +" locked");
+		//reload blocks
 	}
 	                                             //
 	//////////////////////////////////////////////
@@ -244,7 +255,6 @@ if (!module.parent) {
 
 
 function markTimeblock(){
-	var redis_client = redis.createClient();
 	var block = 5*60*1000;
 	var start = Date.UTC(2014,02,1);
 	var end = new Date();
@@ -257,8 +267,9 @@ function markTimeblock(){
 	console.log(blocks);
      
 	for (var i=0;i<(blocks-1);i++) {
-		redis_client.set("tb_id:"+i+":locked", 1);
-		redis_client.set("tb_id:"+i+":past", 1);
+		list.set("tb_id:"+i+":locked", 1);
+		list.set("tb_id:"+i+":past", 1);
 	}
-	redis_client.set("tb_id:"+(blocks)+":current",1);
+	list.set("tb_id:"+(blocks)+":current",1);
+	current_block_id = blocks;
 }
