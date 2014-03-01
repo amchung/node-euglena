@@ -36,8 +36,6 @@ socket.on('snapshot', function(data){
 	var current_block_id = data;
   	var imgpath = takeSnapshot();
 	console.log("tb_id:"+current_block_id+":image");
-	console.log(imgpath);
-	list.set("tb_id:"+current_block_id+":image",imgpath);
 });
 
 /*
@@ -90,6 +88,7 @@ function takeSnapshot(){
         	var path = require('path');
         	var file = path.join('../../Dropbox', 'live-gallery', isoDate+".jpg");
             fs.writeFile(file, imagedata, 'binary');
+			list.set("tb_id:"+current_block_id+":image", isoDate+".jpg");
             return isoDate
         });
     }).on('error', function(e) {
