@@ -211,8 +211,8 @@ if (!module.parent) {
         		if((s==0)&&(m%5==0))
         		{socket.emit('recordblock',current_block_id);}
         	}else{
-        		if((s==0))
-        		{socket.emit('snapshot',currnet_block_id);}
+        		if((s==0)&&(m%5==3))
+        		{socket.emit('snapshot',current_block_id);}
         	}
         });
         
