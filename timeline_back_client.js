@@ -13,7 +13,7 @@ socket.on('connect', function() {
 socket.on('message', function(msg) {
 	var d = new Date().getTime();
 	//list.zadd("image_log", d , msg);
-	console.log(d+": " +msg);
+	//console.log(d+": " +msg);
 	
 	var str = msg.split("&&");
     	switch(Number(str[0]))
@@ -24,7 +24,7 @@ socket.on('message', function(msg) {
   				var imgpath = takeSnapshot();
 				console.log("tb_id:"+current_block_id+":image");
 				console.log(imgpath);
-				//list.set("tb_id:"+current_block_id+":image",imgpath);
+				list.set("tb_id:"+current_block_id+":image",imgpath);
   			break;
   			case 1:
   				// recording the entire block
