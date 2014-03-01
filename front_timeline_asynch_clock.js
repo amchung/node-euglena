@@ -143,7 +143,9 @@ if (!module.parent) {
 						});
         			}
         			
-        			function runCommands(first, last){
+        			function runCommands(firstid, lastid){
+        				var first = parseInt(firstid);
+        				var last = parseInt(lastid);
         				console.log(first+"~"+last);
         				for (var i=first;i<=last;i++){
         					console.log("tb_id:"+i+":user_id");
