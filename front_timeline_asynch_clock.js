@@ -267,8 +267,8 @@ function markTimeblock(){
      SET tb_id:1000:image -1*/
      
 	for (var i=0;i<(blocks-1);i++) {
-		redis.set("tb_id:"+i+":locked", 1);
-		redis.set("tb_id:"+i+":past", 1);
+		list.set("tb_id:"+i+":locked", 1);
+		list.set("tb_id:"+i+":past", 1);
 	}
-	redis.set("tb_id:"+(blocks)+":current",1);
+	list.set("tb_id:"+(blocks)+":current",1);
 }
