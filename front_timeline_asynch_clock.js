@@ -18,7 +18,7 @@ var _ = require('underscore');
 
 var timeblock_id;
 
-setCurrentTimeblock();
+markTimeblock();
 
 // server_clock
 var now = new Date();
@@ -233,7 +233,7 @@ if (!module.parent) {
 }
 
 
-function setTimeblock(){
+function markTimeblock(){
 	var block = 5*60*1000;
 	var start = Date.UTC(2014,02,11,0);
 	//var end = Date.UTC(2014,07,01,0);
