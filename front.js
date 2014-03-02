@@ -77,6 +77,7 @@ socket.configure(function () {
         });
         client.on('disconnect', function() {
             sub.quit();
+            pub.publish("realtime", "0&&"+0+"^"+0+"^"+0+"^"+0);
             pub.publish("realtime","Disconnected :" + client.id);
         });
     });
