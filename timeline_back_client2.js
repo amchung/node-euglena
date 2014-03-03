@@ -7,7 +7,7 @@ const list = redis.createClient();
 var current_block_id;
 var myClock;
 
-const PORT = 3000;
+const PORT = 3001;
 const HOST = '171.65.102.132';
 
 var express = require('express'),
