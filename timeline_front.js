@@ -26,10 +26,7 @@ var now = new Date();
 
 if (!module.parent) {
     server.listen(PORT, HOST);
-
 	const socket  = io.listen(server);
-
-	var rooms = ['arduino','lab'];
 
 	socket.configure(function () {
 	  //socket.set("transports", ["xhr-polling"]);
@@ -43,15 +40,6 @@ if (!module.parent) {
     const pub = redis.createClient();
 
 	socket.on('connection', function(socket) {
-
-    	list.zrevrange("myset", 0 , 4, 'withscores', function(err,members){
-			var lists=_.groupBy(members,function(a,b){
-				return Math.floor(b/2);
-			});
-			console.log( _.toArray(lists) );
-			socket.emit("postscore",  _.toArray(lists) );
-		});
- 
         sub.on("message", function(channel, message) {
             socket.send(message);
         });
@@ -60,27 +48,13 @@ if (!module.parent) {
         	switch(msg.type)
 			{
 				case "setUsername":
-  					pub.publish("realtime", "1&&"+"A New Challenger Enters the Ring:" + socket.id +"  =  "+ msg.user);
-  					break;
-				case "sendscore":
-  					list.zadd("myset", msg.score , msg.user);
-					list.zrevrange("myset", 0 , 4, 'withscores', function(err,members){
-						var lists=_.groupBy(members,function(a,b){
-							return Math.floor(b/2);
-						});
-						//console.log( _.toArray(lists) );
-						socket.emit("postscore",  _.toArray(lists) );
-					});
+  					pub.publish("realtime", "0&&"+"A New Challenger Enters the Ring:" + socket.id +"  =  "+ msg.user);
   					break;
   				case "chat":
+  					pub.publish("realtime", "0&&"+msg.message);
+  					break;
+  				case "update":
   					pub.publish("realtime", "1&&"+msg.message);
-  					break;
-  				case "sendarrow":
-					pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
-  					break;
-  				case "sendvalveopen":
-  					pub.publish("realtime", "1&&"+"Valve triggered.");
-  					break;
 				//default:
   				//	console.log("!!!received unknown input msg!!!");
 			}
