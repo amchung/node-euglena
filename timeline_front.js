@@ -64,114 +64,114 @@ if (!module.parent) {
         	console.log("Error "+err);
         });
         
-        socket.on('timeline',function(msg){
-        	switch(msg.type)
-        	{
-        		case "callblocks":
-        			// get max limit
-        			var timeline_end;
-					list.get('global:next_tb_id', function(err,res){
-					if (err){
-						console.log("error: "+err);
-					}
-						timeline_end =res;
-						getblockIDs();
-					});
-					
-        			// convert dates and get block ids
-        			var beginT = new Date(msg.begintime);
-        			var endT = new Date(msg.endtime);
-        			var begintime = beginT.getTime();
-					var endtime = endT.getTime();
-        			
-        			var firstid;
-        			var lastid;
-        			var commands = [];
-        			
-        			function getblockIDs(){
-						list.get("tb_time:"+begintime+":tb_id", function(err,res){
-							if (err){
-								console.log("error: "+err);
-							}
-							firstid = res;
-							// if out of range
-							if (firstid == null){
-								firstid = 0;
-								lastid = firstid + (3*60/5);
-							}
-							console.log("looking up : block # "+firstid);
-						
-							list.get("tb_time:"+endtime+":tb_id", function(err,res){
-								if (err){
-									console.log("error: "+err);
-								}
-								lastid = res;
-								// if out of range
-								if (lastid == null)
-								{
-									lastid = timeline_end;
-									firstid = lastid - (3*60/5);
-								}
-								console.log(" ~  block # " +lastid);
-							
-								runCommands(firstid, lastid);
-							});
-						});
-        			}
-        			
-        			function runCommands(firstid, lastid){
-        				var first = parseInt(firstid);
-        				var last = parseInt(lastid);
-        				console.log(first+"~"+last);
-        				
-        				for (var i=first;i<=last;i++){
-							commands.push(["get","tb_id:"+i+":time"]);
-							commands.push(["get","tb_id:"+i+":locked"]);
-							commands.push(["get","tb_id:"+i+":user_id"]);
-							commands.push(["get","tb_id:"+i+":exp_id"]);
-							commands.push(["get","tb_id:"+i+":pattern_id"]);
-							commands.push(["get","tb_id:"+i+":past"]);
-							commands.push(["get","tb_id:"+i+":admin"]);
-							commands.push(["get","tb_id:"+i+":current"]);
-							commands.push(["get","tb_id:"+i+":image"]);
-						}
-						list.multi(commands).exec(function (err, res) {
-							if(err){
-								console.log("error: "+err);
-							}else{
-								//console.log("Results: "+res);
-								//console.log( "_Array: " + _.toArray(res)[0] );
-								// emit results
-								socket.emit('postblocks',  _.toArray(res) );
-							}
-						});
-        			}
-						/*JSONData.push({
-							"id": i, 
-							"time": list.get("tb_id:"+i+":time"),
-							"lock": list.get("tb_id:"+i+":locked"),
-							"userid": list.get("tb_id:"+i+":userid"),
-							"expid": list.get("tb_id:"+i+":expid")
-							});*/
-        			break;
-        		case "reserveblock":
-        			// convert dates and get block ids
-        			var targetT = new Date(msg.targettime);
-        			var targettime = targetT.getTime();
-        			var targetid = list.get("tb_time:"+targettime+":tb_id");
-        			
-				 //INCR global:next_exp_id
-				 //SET tb_id:1000:user_id [userid]
-				 //SET tb_id:1000:locked 1
-				 //SET tb_id:1000:exp_id global:next_exp_id
-				 //if freeform
-					  //SET tb_id:1000:pattern_id 0
-        			console.log(targetid);
-        			//list.set("tb_id:"+target_id+":locked", 1);
-        			//list.set("tb_id:"+target_id+":user_id", msg.user);
-        			break;
-        	}
-        });
+        // socket.on('timeline',function(msg){
+//         	switch(msg.type)
+//         	{
+//         		case "callblocks":
+//         			// get max limit
+//         			var timeline_end;
+// 					list.get('global:next_tb_id', function(err,res){
+// 					if (err){
+// 						console.log("error: "+err);
+// 					}
+// 						timeline_end =res;
+// 						getblockIDs();
+// 					});
+// 					
+//         			// convert dates and get block ids
+//         			var beginT = new Date(msg.begintime);
+//         			var endT = new Date(msg.endtime);
+//         			var begintime = beginT.getTime();
+// 					var endtime = endT.getTime();
+//         			
+//         			var firstid;
+//         			var lastid;
+//         			var commands = [];
+//         			
+//         			function getblockIDs(){
+// 						list.get("tb_time:"+begintime+":tb_id", function(err,res){
+// 							if (err){
+// 								console.log("error: "+err);
+// 							}
+// 							firstid = res;
+// 							// if out of range
+// 							if (firstid == null){
+// 								firstid = 0;
+// 								lastid = firstid + (3*60/5);
+// 							}
+// 							console.log("looking up : block # "+firstid);
+// 						
+// 							list.get("tb_time:"+endtime+":tb_id", function(err,res){
+// 								if (err){
+// 									console.log("error: "+err);
+// 								}
+// 								lastid = res;
+// 								// if out of range
+// 								if (lastid == null)
+// 								{
+// 									lastid = timeline_end;
+// 									firstid = lastid - (3*60/5);
+// 								}
+// 								console.log(" ~  block # " +lastid);
+// 							
+// 								runCommands(firstid, lastid);
+// 							});
+// 						});
+//         			}
+//         			
+//         			function runCommands(firstid, lastid){
+//         				var first = parseInt(firstid);
+//         				var last = parseInt(lastid);
+//         				console.log(first+"~"+last);
+//         				
+//         				for (var i=first;i<=last;i++){
+// 							commands.push(["get","tb_id:"+i+":time"]);
+// 							commands.push(["get","tb_id:"+i+":locked"]);
+// 							commands.push(["get","tb_id:"+i+":user_id"]);
+// 							commands.push(["get","tb_id:"+i+":exp_id"]);
+// 							commands.push(["get","tb_id:"+i+":pattern_id"]);
+// 							commands.push(["get","tb_id:"+i+":past"]);
+// 							commands.push(["get","tb_id:"+i+":admin"]);
+// 							commands.push(["get","tb_id:"+i+":current"]);
+// 							commands.push(["get","tb_id:"+i+":image"]);
+// 						}
+// 						list.multi(commands).exec(function (err, res) {
+// 							if(err){
+// 								console.log("error: "+err);
+// 							}else{
+// 								//console.log("Results: "+res);
+// 								//console.log( "_Array: " + _.toArray(res)[0] );
+// 								// emit results
+// 								socket.emit('postblocks',  _.toArray(res) );
+// 							}
+// 						});
+//         			}
+// 						/*JSONData.push({
+// 							"id": i, 
+// 							"time": list.get("tb_id:"+i+":time"),
+// 							"lock": list.get("tb_id:"+i+":locked"),
+// 							"userid": list.get("tb_id:"+i+":userid"),
+// 							"expid": list.get("tb_id:"+i+":expid")
+// 							});*/
+//         			break;
+//         		case "reserveblock":
+//         			// convert dates and get block ids
+//         			var targetT = new Date(msg.targettime);
+//         			var targettime = targetT.getTime();
+//         			var targetid = list.get("tb_time:"+targettime+":tb_id");
+//         			
+// 				 //INCR global:next_exp_id
+// 				 //SET tb_id:1000:user_id [userid]
+// 				 //SET tb_id:1000:locked 1
+// 				 //SET tb_id:1000:exp_id global:next_exp_id
+// 				 //if freeform
+// 					  //SET tb_id:1000:pattern_id 0
+//         			console.log(targetid);
+//         			//list.set("tb_id:"+target_id+":locked", 1);
+//         			//list.set("tb_id:"+target_id+":user_id", msg.user);
+//         			break;
+//         	}
+//         });
         
         socket.on('lookclock', function(){
         	function display(date){
