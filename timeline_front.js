@@ -154,10 +154,21 @@ if (!module.parent) {
 							"expid": list.get("tb_id:"+i+":expid")
 							});*/
         			break;
-        		case "writeblocks":
+        		case "reserveblock":
         			// convert dates and get block ids
-        			var targetdate = msg.targetdate;
-        			var targetid = list.get("tb_time:"+targetdate+":tb_id");
+        			var targetT = new Date(msg.targettime);
+        			var targettime = targetT.getTime();
+        			var targetid = list.get("tb_time:"+targettime+":tb_id");
+        			
+				 //INCR global:next_exp_id
+				 //SET tb_id:1000:user_id [userid]
+				 //SET tb_id:1000:locked 1
+				 //SET tb_id:1000:exp_id global:next_exp_id
+				 //if freeform
+					  //SET tb_id:1000:pattern_id 0
+        			console.log(targetid);
+        			//list.set("tb_id:"+target_id+":locked", 1);
+        			//list.set("tb_id:"+target_id+":user_id", msg.user);
         			break;
         	}
         });
