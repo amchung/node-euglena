@@ -27,12 +27,18 @@ function myTimer(){
 	socket.emit('lookimgclock');
 }
 
-/*socket.on('recordblock', function(data){
-  	console.log(data);
-  	current_block_id = data;	
-});*/
 socket.on('tic', function(data){
 	console.log(data);
+});
+
+socket.on('recordblock', function(data){
+  	current_block_id = data;
+  	onsole.log("START RECORD:" current_block_id);	
+});
+
+socket.on('stoprecordblock', function(data){
+  	current_block_id = data;	
+  	console.log("STOP RECORD:" current_block_id);
 });
 
 socket.on('snapshot', function(data){
@@ -40,29 +46,6 @@ socket.on('snapshot', function(data){
   	var imgpath = takeSnapshot();
   	console.log(current_block_id);
 });
-
-/*
-socket.on('message', function(msg) {
-	var d = new Date().getTime();
-	//list.zadd("image_log", d , msg);
-	//console.log(d+": " +msg);
-	
-	var str = msg.split("&&");
-    	switch(Number(str[0]))
-		{
-  			case 0:
-  				// snapshot only at 3:00
-  				var current_block_id = str[1];
-  				var imgpath = takeSnapshot();
-				console.log("tb_id:"+current_block_id+":image");
-				console.log(imgpath);
-				list.set("tb_id:"+current_block_id+":image",imgpath);
-  			break;
-  			case 1:
-  				// recording the entire block
-  			break;
-		}
-});*/
 
 socket.on('disconnect', function(client) {
 	console.log("Disconnected!!!");
