@@ -17,11 +17,11 @@ markTimeblock();
 var now = new Date();
 
 
-	socket.configure(function () {
+	io.configure(function () {
 	  //socket.set("transports", ["xhr-polling"]);
 	  //socket.set("polling duration", 10);
 	  //socket.set("close timeout", 10);
-	  socket.set("log level", 1);
+	  io.set("log level", 1);
 	});
 
     const sub = redis.createClient();
