@@ -104,7 +104,7 @@ var now = new Date();
         
         socket.on('/back/arduino/#excutedRequest', function(msg){
         	//socket.broadcast.emit(msg);
-        	io.sockets.emit(msg);
+        	io.sockets.emit('client-msg',msg);
         });
         
         socket.on('disconnect', function() {
