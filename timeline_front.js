@@ -132,8 +132,10 @@ var now = new Date();
      	console.log("bye bye block "+current_block_id);
      	current_block_id = current_block_id+1;
      	list.set("tb_id:"+current_block_id+":current",1);
-     	current_block_record = list.get("tb_id:"+current_block_id+":locked");
-     	var test = list.get("tb_id:"+current_block_id+":user_id");
+     	current_block_record = redis_get("tb_id:"+current_block_id+":locked");
+     	var test = redis_get("tb_id:"+current_block_id+":user_id");
+     	
+     	
      	console.log("hello block "+current_block_id);
      	console.log("current block needs recording:"+current_block_record+" for "+test);
      	
@@ -145,6 +147,15 @@ var now = new Date();
 		console.log("block "+current_block_id +" locked");
 		
 		//reload blocks
+	}
+	
+	function redis_get(key){
+		list.get(key, function(err,res){
+		if (err){
+			console.log("error: "+err);
+		}
+			return res
+		});
 	}
 	                                             //
 	//////////////////////////////////////////////
