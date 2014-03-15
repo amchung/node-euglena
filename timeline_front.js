@@ -145,8 +145,7 @@ var now = new Date();
 		});
      	
      	console.log("hello block "+current_block_id);
-     	console.log("current block record on: "+current_block_record):
-     	
+     	console.log("current block record on: "+current_block_record);     	
      	//reload blocks
 	}
 	
