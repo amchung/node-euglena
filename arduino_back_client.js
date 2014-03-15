@@ -59,11 +59,11 @@ socket.on('arduino-commands', function(msg) {
 	function redis_zadd(key,z,value){
 		client.zadd(key,z,value, function(err) {
 			if (err) {
-			   console.error("error");
+			   console.error("error: zadd");
 			} else {
-				client.get(key, function(err, value) {
+				client.zrangebyscore(key, d, d, function(err, value) {
 					 if (err) {
-						 console.error("error");
+						 console.error("error:zrangebyscore");
 					 } else {
 						 console.log(">>>> >>"+key+" : "+ value);
 						     switch(Number(str[0]))
