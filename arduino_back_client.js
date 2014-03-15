@@ -73,10 +73,11 @@ socket.on('arduino-commands', function(msg) {
 									board.emit('changeLED', ledArray);
 								break;
 								case 1:
-									board.emit('valveTrigger', msg);
+									board.emit('valveTrigger', str[1]);
 								break;
 							}
-						 socket.emit('back/arduino/#excutedRequest', msg);
+						 console.log(msg);
+						 socket.emit('/back/arduino/#excutedRequest', msg);
 					 }
 				});
 			  }
