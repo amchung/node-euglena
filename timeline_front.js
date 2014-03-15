@@ -82,7 +82,7 @@ var now = new Date();
 			}
 				if(res == 1){
 					current_block_record = true;
-					console.log("current block record on: "+current_block_record); 
+					//console.log("current block record on: "+current_block_record); 
 				}else{
 					current_block_record = false;
 				}
@@ -90,7 +90,7 @@ var now = new Date();
         	var m = now.getMinutes();
 			var s = now.getSeconds();
         	if(current_block_record){
-        		socket.emit('recordblock',current_block_id);
+        		if(m>3){socket.emit('recordblock',current_block_id);}
         	}else{
         		if((s==0)&&(m%5==0)) {socket.emit('stoprecordblock');}
         	}
