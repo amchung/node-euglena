@@ -103,7 +103,7 @@ var now = new Date();
         });
         
         socket.on('/back/arduino/#excutedRequest', function(msg){
-        	socket.broadcast(msg);	
+        	socket.broadcast.emit(msg);	
         });
         
         socket.on('disconnect', function() {
