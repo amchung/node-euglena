@@ -37,21 +37,22 @@ socket.on('recordblock', function(data){
   	console.log("START RECORD:"+ current_block_id);	
 });
 
-socket.on('stoprecordblock', function(data){
-  	current_block_id = data;
+socket.on('stoprecordblock', function(){
+  	//current_block_id = data;
   	RecordOn = false;
-  	console.log("STOP RECORD:"+ current_block_id);
+  	console.log("STOP RECORD");
 });
 
 socket.on('disconnect', function(client) {
 	console.log("Disconnected!!!");
+	RecordOn = false;
 });
 
 socket.on('arduino-commands', function(msg) {
 	var d = new Date().getTime();
 	if(RecordOn==true){
 		var keyname = "tb_id:"+current_block_id+":arduino-log";
-		client.zadd(keyname, d , msg);
+		redis_zadd(keyname, d , msg);
 	}
 	var str = msg.split("&&");
     

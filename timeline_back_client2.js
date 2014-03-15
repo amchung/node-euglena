@@ -36,9 +36,9 @@ socket.on('recordblock', function(data){
   	console.log("START RECORD:"+ current_block_id);	
 });
 
-socket.on('stoprecordblock', function(data){
-  	current_block_id = data;	
-  	console.log("STOP RECORD:"+ current_block_id);
+socket.on('stoprecordblock', function(){
+  	//current_block_id = data;	
+  	console.log("STOP RECORD");
 });
 
 socket.on('snapshot', function(data){
