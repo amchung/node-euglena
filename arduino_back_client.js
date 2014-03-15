@@ -40,7 +40,7 @@ socket.on('recordblock', function(data){
 socket.on('stoprecordblock', function(){
   	//current_block_id = data;
   	RecordOn = false;
-  	console.log("RECORD OFF");
+  	console.log("RECORD OFF /////////////");
 });
 
 socket.on('disconnect', function(client) {
