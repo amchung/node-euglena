@@ -50,13 +50,12 @@ socket.on('disconnect', function(client) {
 socket.on('arduino-commands', function(msg) {
 	var d = new Date().getTime();
 	if(RecordOn==true){
-		console.log(msg);
 		var keyname = "tb_id:"+current_block_id+":arduino-log";
 		client.zadd(keyname, d , msg);
 	}
 	var str = msg.split("&&");
     
-	function redis_zadd(key,z,value,output){
+	function redis_zadd(key,z,value){
 		client.zadd(key,z,value, function(err) {
 			if (err) {
 			   console.error("error");
@@ -144,4 +143,48 @@ board.on('valveTrigger', function(){
 ////////////////////////////////////////////////
 
 
+/*
+	onclock(one_block);
 
+	function onclock(cb) {
+		(function loop() {
+			now = new Date();      
+		if (now.getSeconds() === 0){
+				if (now.getMinutes()%5 == 3){
+					lock_current_block();
+				}
+				if (now.getMinutes()%5 == 0){
+					cb(now);
+				}
+			}
+			now = new Date();                  // allow for time passing
+			var delay = 1000 - (now % 1000); // exact ms to next minute interval
+			setTimeout(loop, delay);
+		})();
+	}
+
+	function one_block(now){
+     	//take a snapshot, image = image_dir
+     	list.set("tb_id:"+current_block_id+":past", 1);
+     	list.set("tb_id:"+current_block_id+":current", 0);
+     	console.log("bye bye block "+current_block_id);
+     	current_block_id = current_block_id+1;
+     	list.set("tb_id:"+current_block_id+":current",1);
+     	
+     	list.get("tb_id:"+current_block_id+":locked", function(err,res){
+		if (err){
+			console.log("error: "+err);
+		}
+			if(res == 1){
+				current_block_record = true;
+			}else{
+				current_block_record = false;
+			}
+			console.log("current block record on: "+current_block_record); 
+		});
+     	
+     	console.log("hello block "+current_block_id);    	
+     	//reload blocks
+	}
+
+*/
