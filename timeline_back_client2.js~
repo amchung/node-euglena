@@ -33,7 +33,7 @@ socket.on('tic', function(data){
 
 socket.on('recordblock', function(data){
   	current_block_id = data;
-  	console.log("START RECORD:"+ current_block_id);	
+  	onsole.log("START RECORD:"+ current_block_id);	
 });
 
 socket.on('stoprecordblock', function(data){
