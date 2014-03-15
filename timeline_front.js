@@ -55,11 +55,11 @@ if (!module.parent) {
   				case "update":
   					pub.publish("realtime", "1&&"+msg.message);
   				case "/arduino/#sendLEDarrow":
-  					socket.emit('arduino-commands',"0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
+  					app.io.sockets.emit('arduino-commands',"0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
 					//pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
   				case "/arduino/#sendvalvetrigger":
-  					socket.emit('arduino-commands',"1&&"+"Valve triggered.");
+  					app.io.sockets.emit('arduino-commands',"1&&"+"Valve triggered.");
   					//pub.publish("realtime", "1&&"+"Valve triggered.");
   					break;
 			}
@@ -107,7 +107,7 @@ if (!module.parent) {
         
         socket.on('disconnect', function() {
             sub.quit();
-            socket.emit('arduino-commands',"0&&"+0+"^"+0+"^"+0+"^"+0);
+            app.io.sockets.emit('arduino-commands',"0&&"+0+"^"+0+"^"+0+"^"+0);
             pub.publish("realtime","Disconnected :" + socket.id);
         });
     });
@@ -120,10 +120,7 @@ if (!module.parent) {
 
 	function onclock(cb) {
 		(function loop() {
-			now = new Date();
-		//console.log(now.getHours()+":"+now.getMinutes()+":"+now.getSeconds());
-			//if (now.getDate() === 12 && now.getHours() === 12 && now.getMinutes() === 0) {
-		//socket.emit('server_clock',"tic");        
+			now = new Date();      
 		if (now.getSeconds() === 0){
 				if (now.getMinutes()%5 == 3){
 					lock_current_block();
@@ -147,6 +144,7 @@ if (!module.parent) {
      	list.set("tb_id:"+current_block_id+":current",1);
      	current_block_record = list.get("tb_id:"+current_block_id+":locked");
      	console.log("hello block "+current_block_id);
+     	console.log("current block needs recording:"+current_block_record);
      	
      	//reload blocks
 	}
@@ -181,8 +179,6 @@ function markTimeblock(){
 	}
 	list.set("tb_id:"+(blocks)+":current",1);
 	current_block_id = blocks;
-	current_block_record = list.get("tb_id:"+current_block_id+":locked");
 	console.log("current block id:"+current_block_id);
-	console.log("current block needs recording:"+current_block_record);
 }
 
