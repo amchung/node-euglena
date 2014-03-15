@@ -64,10 +64,8 @@ socket.on('arduino-commands', function(msg) {
 				client.get(key, function(err, value) {
 					 if (err) {
 						 console.error("error");
-						 //socket.emit('/timeline/#doneRequest', "error");
 					 } else {
 						 console.log(">>>> >>"+key+" : "+ value);
-						 //socket.emit('/timeline/#doneRequest', output);
 						     switch(Number(str[0]))
 						     {
 						     	case 0:

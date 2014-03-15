@@ -135,9 +135,7 @@ var now = new Date();
      	current_block_record = redis_get("tb_id:"+current_block_id+":locked");
      	var test = redis_get("tb_id:"+current_block_id+":user_id");
      	
-     	
      	console.log("hello block "+current_block_id);
-     	console.log("current block needs recording:"+current_block_record+" for "+test);
      	
      	//reload blocks
 	}
@@ -154,6 +152,7 @@ var now = new Date();
 		if (err){
 			console.log("error: "+err);
 		}
+			console.log(res);
 			return res
 		});
 	}
