@@ -142,10 +142,10 @@ var now = new Date();
 			}else{
 				current_block_record = false;
 			}
+			console.log("current block record on: "+current_block_record); 
 		});
      	
-     	console.log("hello block "+current_block_id);
-     	console.log("current block record on: "+current_block_record);     	
+     	console.log("hello block "+current_block_id);    	
      	//reload blocks
 	}
 	
