@@ -48,9 +48,9 @@ socket.on('disconnect', function(client) {
 });
 
 socket.on('arduino-commands', function(msg) {
-	console.log(msg);
 	var d = new Date().getTime();
-	if(RecordOn){
+	if(RecordOn==true){
+		console.log(msg);
 		var keyname = "tb_id:"+current_block_id+":arduino-log";
 		client.zadd(keyname, d , msg);
 	}
