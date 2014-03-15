@@ -1,15 +1,8 @@
 const PORT = 3006;
-const HOST = '171.65.102.132';
-
-var express = require('express'),
-	http = require('http'),
-	server = http.createServer(app);
-	
-var app = express();
 
 var redis = require('redis');
 
-var io = require('socket.io');
+var io = require('socket.io').listen(PORT);
 
 var list = redis.createClient();
 
@@ -23,9 +16,6 @@ markTimeblock();
 // server_clock
 var now = new Date();
 
-if (!module.parent) {
-    server.listen(PORT, HOST);
-	const socket  = io.listen(server);
 
 	socket.configure(function () {
 	  //socket.set("transports", ["xhr-polling"]);
@@ -38,7 +28,7 @@ if (!module.parent) {
     sub.subscribe('realtime');
     const pub = redis.createClient();
 
-	socket.on('connection', function(socket) {
+	io.sockets.on('connection', function(socket) {
         sub.on("message", function(channel, message) {
             socket.send(message);
         });
@@ -158,7 +148,6 @@ if (!module.parent) {
 	}
 	                                             //
 	//////////////////////////////////////////////
-}
 
 
 function markTimeblock(){
