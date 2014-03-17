@@ -183,7 +183,9 @@ function markTimeblock(){
 	console.log(end);
 	console.log((end-start)/block);
 	console.log(blocks);
-     
+    
+    list.set("global:current:tb_id", blocks);
+    
 	for (var i=0;i<(blocks-1);i++) {
 		list.set("tb_id:"+i+":locked", 1);
 		list.set("tb_id:"+i+":past", 1);
