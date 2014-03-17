@@ -18,7 +18,7 @@ var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to clock server..");
-	myclock();
+	myclock(myTimer);
 });
 
 
@@ -144,14 +144,15 @@ board.on('valveTrigger', function(){
 client local timer
  */
 
-function myclock() {
+function myclock(cb) {
 	(function loop() {
-		now = new Date();      
-	if (now.getSeconds() === 0){
-			socket.emit('lookimgclock');
-		}
+		cb();
 		now = new Date();                  // allow for time passing
 		var delay = 500 - (now % 500); // exact ms to next 1/2 minute interval
 		setTimeout(loop, delay);
 	})();
+}
+
+function myTimer(){
+	socket.emit('lookimgclock');
 }
