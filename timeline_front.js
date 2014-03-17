@@ -143,6 +143,7 @@ var now = new Date();
      	list.set("tb_id:"+current_block_id+":current", 0);
      	console.log("bye bye block "+current_block_id);
      	current_block_id = current_block_id+1;
+     	list.set("global:current:tb_id", current_block_id);
      	list.set("tb_id:"+current_block_id+":current",1);
      	
      	list.get("tb_id:"+current_block_id+":locked", function(err,res){
