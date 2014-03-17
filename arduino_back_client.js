@@ -21,7 +21,7 @@ var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to clock server..");
-	myClock=setInterval(function(){myTimer()},200);
+	myClock=setInterval(function(){myTimer()},500);
 });
 
 function myTimer(){
