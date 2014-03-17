@@ -9,6 +9,7 @@ const client = redis.createClient();
 
 var current_block_id;
 var RecordOn = false;
+var oldtime = 0;
 
 var myClock;
 
@@ -20,7 +21,7 @@ var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to clock server..");
-	myClock=setInterval(function(){myTimer()},500);
+	myClock=setInterval(function(){myTimer()},200);
 });
 
 function myTimer(){
@@ -28,7 +29,10 @@ function myTimer(){
 }
 
 socket.on('tic', function(data){
-	console.log(data);
+	if (data != oldtime){
+		console.log(data);
+	}
+	oldtime = data;
 });
 
 socket.on('recordblock', function(data){
