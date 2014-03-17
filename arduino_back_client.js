@@ -10,6 +10,8 @@ const client = redis.createClient();
 var current_block_id;
 var RecordOn = false;
 
+var myClock;
+
 var express = require('express'),
 	http = require('http'),
 	server = http.createServer(app);
@@ -18,9 +20,12 @@ var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to clock server..");
-	myclock(myTimer);
+	myClock=setInterval(function(){myTimer()},500);
 });
 
+function myTimer(){
+	socket.emit('lookimgclock');
+}
 
 socket.on('tic', function(data){
 	console.log(data);
@@ -138,21 +143,3 @@ board.on('valveTrigger', function(){
     });
                                               //
 ////////////////////////////////////////////////
-
-
-/*
-client local timer
- */
-
-function myclock(cb) {
-	(function loop() {
-		cb();
-		now = new Date();                  // allow for time passing
-		var delay = 500 - (now % 500); // exact ms to next 1/2 minute interval
-		setTimeout(loop, delay);
-	})();
-}
-
-function myTimer(){
-	socket.emit('lookimgclock');
-}
