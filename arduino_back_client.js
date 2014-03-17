@@ -10,8 +10,6 @@ const client = redis.createClient();
 var current_block_id;
 var RecordOn = false;
 
-var myClock;
-
 var express = require('express'),
 	http = require('http'),
 	server = http.createServer(app);
@@ -20,12 +18,9 @@ var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to clock server..");
-	myClock=setInterval(function(){myTimer()},500);
+	myclock();
 });
 
-function myTimer(){
-	socket.emit('lookimgclock');
-}
 
 socket.on('tic', function(data){
 	console.log(data);
@@ -146,47 +141,17 @@ board.on('valveTrigger', function(){
 
 
 /*
-	onclock(one_block);
+client local timer
+ */
 
-	function onclock(cb) {
-		(function loop() {
-			now = new Date();      
-		if (now.getSeconds() === 0){
-				if (now.getMinutes()%5 == 3){
-					lock_current_block();
-				}
-				if (now.getMinutes()%5 == 0){
-					cb(now);
-				}
-			}
-			now = new Date();                  // allow for time passing
-			var delay = 1000 - (now % 1000); // exact ms to next minute interval
-			setTimeout(loop, delay);
-		})();
-	}
-
-	function one_block(now){
-     	//take a snapshot, image = image_dir
-     	list.set("tb_id:"+current_block_id+":past", 1);
-     	list.set("tb_id:"+current_block_id+":current", 0);
-     	console.log("bye bye block "+current_block_id);
-     	current_block_id = current_block_id+1;
-     	list.set("tb_id:"+current_block_id+":current",1);
-     	
-     	list.get("tb_id:"+current_block_id+":locked", function(err,res){
-		if (err){
-			console.log("error: "+err);
+function myclock() {
+	(function loop() {
+		now = new Date();      
+	if (now.getSeconds() === 0){
+			socket.emit('lookimgclock');
 		}
-			if(res == 1){
-				current_block_record = true;
-			}else{
-				current_block_record = false;
-			}
-			console.log("current block record on: "+current_block_record); 
-		});
-     	
-     	console.log("hello block "+current_block_id);    	
-     	//reload blocks
-	}
-
-*/
+		now = new Date();                  // allow for time passing
+		var delay = 500 - (now % 500); // exact ms to next 1/2 minute interval
+		setTimeout(loop, delay);
+	})();
+}

@@ -89,6 +89,18 @@ var now = new Date();
 			});
         	var m = now.getMinutes();
 			var s = now.getSeconds();
+			
+			if (m>3){
+				if(current_block_record){
+					socket.emit('recordblock',current_block_id);
+				}else{
+					socket.emit('stoprecordblock');
+				}
+			}else{
+				if(current_block_record){
+					
+				}
+			};
         	if(current_block_record){
         		if(m>3){socket.emit('recordblock',current_block_id);}
         	}else{
