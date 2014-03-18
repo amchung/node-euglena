@@ -37,7 +37,7 @@ socket.on('tic', function(data){
 
 socket.on('recordblock', function(data){
   	current_block_id = data;
-  	var imgpath = takeRecordShot(dir);
+  	var imgpath = takeRecordShot("test");
   	/* var keyname = "tb_id:"+current_block_id+":image";
             console.log(keyname);
 			list.set(keyname, isoDate+".jpg");*/
@@ -51,7 +51,7 @@ socket.on('stoprecordblock', function(){
 
 socket.on('snapshot', function(data){
 	current_block_id = data;
-  	var imgpath = takeSnapshot("test");
+  	var imgpath = takeSnapshot();
   	console.log(current_block_id);
 });
 
