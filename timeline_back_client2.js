@@ -21,7 +21,7 @@ var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
-	myClock=setInterval(function(){myTimer()},500);
+	myClock=setInterval(function(){myTimer()},200);
 });
 
 function myTimer(){
@@ -45,7 +45,7 @@ function myRecorder(dir){
 socket.on('recordblock', function(data){
   	current_block_id = data;
   	//var recordClock=setInterval(function(){myRecorder(exp_id+"/")},1000/10);
-  	recordClock=setInterval(function(){myRecorder("test")},1000/5);
+  	myRecorder("test");
   	/* var keyname = "tb_id:"+current_block_id+":image";
             console.log(keyname);
 			list.set(keyname, isoDate+".jpg");*/
