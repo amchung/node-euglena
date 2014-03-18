@@ -42,11 +42,6 @@ function myRecorder(dir){
 	console.log("dir");
 }
 
-function StopMyRecord(){
-	clearInterval(recordClock);
-}
-
-
 socket.on('recordblock', function(data){
   	current_block_id = data;
   	//var recordClock=setInterval(function(){myRecorder(exp_id+"/")},1000/10);
@@ -59,7 +54,7 @@ socket.on('recordblock', function(data){
 
 socket.on('stoprecordblock', function(){
   	//current_block_id = data;
-  	StopMyRecord();
+  	clearInterval(recordClock);
   	console.log("RECORD OFF //////////////");
 });
 
