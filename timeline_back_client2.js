@@ -35,17 +35,9 @@ socket.on('tic', function(data){
 	oldtime = data;
 });
 
-var recordClock;
-
-function myRecorder(dir){
-	//var imgpath = takeSnapshot(dir);
-	console.log("dir");
-}
-
 socket.on('recordblock', function(data){
   	current_block_id = data;
-  	//var recordClock=setInterval(function(){myRecorder(exp_id+"/")},1000/10);
-  	myRecorder("test");
+  	var imgpath = takeRecordShot(dir);
   	/* var keyname = "tb_id:"+current_block_id+":image";
             console.log(keyname);
 			list.set(keyname, isoDate+".jpg");*/
@@ -54,13 +46,12 @@ socket.on('recordblock', function(data){
 
 socket.on('stoprecordblock', function(){
   	//current_block_id = data;
-  	clearInterval(recordClock);
   	console.log("RECORD OFF //////////////");
 });
 
 socket.on('snapshot', function(data){
 	current_block_id = data;
-  	var imgpath = takeSnapshot();
+  	var imgpath = takeSnapshot("test");
   	console.log(current_block_id);
 });
 
@@ -113,7 +104,7 @@ function takeSnapshot(){
 	});
 }
 
-function recordSnapshot(dir){
+function takeRecordShot(dir){
   var timestamp = new Date().getTime();
   
   http.get("http://171.65.102.132:8080/?action=snapshot?t=" + timestamp, function(res) {
@@ -126,7 +117,7 @@ function recordSnapshot(dir){
         	var isoDate = new Date(timestamp).toISOString();
         	console.log("live-gallery/"+dir+"/"+isoDate+".jpg");
         	var path = require('path');
-        	var file = path.join('../../Dropbox','live-gallery',dir, isoDate+".jpg");
+        	var file = path.join('../../Dropbox','live-gallery',dir,isoDate+".jpg");
             fs.writeFile(file, imagedata, 'binary');
             return isoDate
         });
