@@ -94,7 +94,7 @@ var now = new Date();
         	}else{
         		if((s==0)&&(m%5==0)) {socket.emit('stoprecordblock');}
         	}
-        	if((s==0)&&(m%5==3)){
+        	if((s==0)&&(m%5==4)){
         	//if(s==0){
         		socket.emit('snapshot',current_block_id);
         	}else{
@@ -124,7 +124,7 @@ var now = new Date();
 		(function loop() {
 			now = new Date();      
 		if (now.getSeconds() === 0){
-				if (now.getMinutes()%5 == 3){
+				if (now.getMinutes()%5 == 4){
 					lock_current_block();
 				}
 				if (now.getMinutes()%5 == 0){

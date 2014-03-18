@@ -38,7 +38,8 @@ socket.on('tic', function(data){
 var recordClock;
 
 function myRecorder(dir){
-	var imgpath = takeSnapshot(dir);
+	//var imgpath = takeSnapshot(dir);
+	console.log("dir");
 }
 
 function StopMyRecord(){
@@ -49,7 +50,10 @@ function StopMyRecord(){
 socket.on('recordblock', function(data){
   	current_block_id = data;
   	//var recordClock=setInterval(function(){myRecorder(exp_id+"/")},1000/10);
-  	var recordClock=setInterval(function(){myRecorder("test/")},1000/5);
+  	recordClock=setInterval(function(){myRecorder("test")},1000/5);
+  	/* var keyname = "tb_id:"+current_block_id+":image";
+            console.log(keyname);
+			list.set(keyname, isoDate+".jpg");*/
   	console.log("RECORD ON:"+ current_block_id);
 });
 
@@ -61,7 +65,7 @@ socket.on('stoprecordblock', function(){
 
 socket.on('snapshot', function(data){
 	current_block_id = data;
-  	var imgpath = takeSnapshot("");
+  	var imgpath = takeSnapshot();
   	console.log(current_block_id);
 });
 
@@ -88,7 +92,7 @@ app.listen(PORT);
 setInterval(takeSnapshot, snapshot_t_interval);
 takeSnapshot();*/
 
-function takeSnapshot(dir){
+function takeSnapshot(){
   var timestamp = new Date().getTime();
   
   http.get("http://171.65.102.132:8080/?action=snapshot?t=" + timestamp, function(res) {
@@ -99,13 +103,36 @@ function takeSnapshot(dir){
         });
         res.on('end', function(){
         	var isoDate = new Date(timestamp).toISOString();
-        	console.log("live-gallery/"+dir+isoDate+".jpg");
+        	console.log("live-gallery/"+isoDate+".jpg");
         	var path = require('path');
-        	var file = path.join('../../Dropbox', 'live-gallery', isoDate+".jpg");
+        	var file = path.join('../../Dropbox','live-gallery', isoDate+".jpg");
             fs.writeFile(file, imagedata, 'binary');
             var keyname = "tb_id:"+current_block_id+":image";
             console.log(keyname);
 			list.set(keyname, isoDate+".jpg");
+            return isoDate
+        });
+    }).on('error', function(e) {
+      		console.log("Got error: " + e.message);
+      		return "err"
+	});
+}
+
+function recordSnapshot(dir){
+  var timestamp = new Date().getTime();
+  
+  http.get("http://171.65.102.132:8080/?action=snapshot?t=" + timestamp, function(res) {
+        res.setEncoding('binary');
+        var imagedata = '';
+        res.on('data', function(chunk){
+            imagedata+= chunk; 
+        });
+        res.on('end', function(){
+        	var isoDate = new Date(timestamp).toISOString();
+        	console.log("live-gallery/"+dir+"/"+isoDate+".jpg");
+        	var path = require('path');
+        	var file = path.join('../../Dropbox','live-gallery',dir, isoDate+".jpg");
+            fs.writeFile(file, imagedata, 'binary');
             return isoDate
         });
     }).on('error', function(e) {
