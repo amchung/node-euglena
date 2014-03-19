@@ -76,11 +76,11 @@ var now = new Date();
         });
         
         socket.on('lookimgclock', function(){
-        	list.get("tb_id:"+current_block_id+":locked", function(err,res){
+        	list.get("tb_id:"+current_block_id+":exp_id", function(err,res){
 			if (err){
 				console.log("error: "+err);
 			}
-				if(res == 1){
+				if(res > 0){
 					current_block_record = true;
 					//console.log("current block record on: "+current_block_record); 
 				}else{
@@ -90,7 +90,7 @@ var now = new Date();
         	var m = now.getMinutes();
 			var s = now.getSeconds();
         	if(current_block_record){
-        		if(m%5<3){socket.emit('recordblock',current_block_id);}
+        		socket.emit('recordblock',current_block_id);
         	}else{
         		if((s==0)&&(m%5==0)) {socket.emit('stoprecordblock');}
         	}
