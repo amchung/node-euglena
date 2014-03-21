@@ -37,7 +37,7 @@ socket.on('tic', function(data){
 
 socket.on('recordblock', function(data){
   	current_block_id = data;
-  	var imgpath = takeRecordShot("test");
+  	var imgpath = takeRecordShot(current_block_id);
   	/* var keyname = "tb_id:"+current_block_id+":image";
             console.log(keyname);
 			list.set(keyname, isoDate+".jpg");*/
@@ -118,8 +118,11 @@ function takeRecordShot(dir){
         	console.log("live-gallery/"+dir+"/"+isoDate+".jpg");
         	var path = require('path');
         	var file = path.join('../../Dropbox','live-gallery',dir,isoDate+".jpg");
-            fs.writeFile(file, imagedata, 'binary');
-            return isoDate
+        	fs.open(file, 'w', function(err, fd) {
+				fs.writeFile(file, imagedata, 'binary');
+				fs.close(fd);
+				return isoDate
+			});
         });
     }).on('error', function(e) {
       		console.log("Got error: " + e.message);
