@@ -118,9 +118,9 @@ function takeRecordShot(dir){
         	console.log("live-gallery/"+dir+"/"+isoDate+".jpg");
         	var path = require('path');
         	var file = path.join('../../Dropbox','live-gallery',dir,isoDate+".jpg");
-        	fs.open(file, 'w', function(err, fd) {
+        	fs.open(file, 'w+', function(err, fd) {
 				fs.writeFile(file, imagedata, 'binary');
-				fs.closeSync(fd);
+				fs.close(fd);
 			});
 			return isoDate
         });
