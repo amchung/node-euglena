@@ -118,11 +118,18 @@ function takeRecordShot(dir){
         	console.log("live-gallery/"+dir+"/"+isoDate+".jpg");
         	var path = require('path');
         	var file = path.join('../../Dropbox','live-gallery',dir,isoDate+".jpg");
-        	fs.open(file, 'w+', function(err, fd) {
-				fs.writeFile(file, imagedata, 'binary');
-				return isoDate
+        	fs.exists('../../Dropbox/live-gallery/'+dir, function (exists) {
+  				if (!exists){
+  					fs.mkdir('../../Dropbox/live-gallery/'+dir, callback)
+  				}else{
+  					callback();
+  				}
+  				
+  				function callback(){
+  					fs.writeFile(file, imagedata, 'binary');
+  				}
+  				return isoDate
 			});
-			fs.close(fd);
         });
     }).on('error', function(e) {
       		console.log("Got error: " + e.message);
