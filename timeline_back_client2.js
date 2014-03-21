@@ -120,9 +120,11 @@ function takeRecordShot(dir){
         	var file = path.join('../../Dropbox','live-gallery',dir,isoDate+".jpg");
         	fs.open(file, 'w', function(err, fd) {
 				fs.writeFile(file, imagedata, 'binary');
-				fs.close(fd);
-				return isoDate
+				fs.close(fd,cb);
 			});
+			function cb(){
+				return isoDate
+			}
         });
     }).on('error', function(e) {
       		console.log("Got error: " + e.message);
