@@ -88,7 +88,7 @@ function takeSnapshot(){
             imagedata+= chunk; 
         });
         res.on('end', function(){
-        	var isoDate = new Date(timestamp).toISOString();
+        	var isoDate = timestamp.toString();
         	console.log("live-gallery/"+isoDate+".jpg");
         	var path = require('path');
         	var file = path.join('../../Dropbox','live-gallery', isoDate+".jpg");
@@ -114,7 +114,7 @@ function takeRecordShot(dir){
             imagedata+= chunk; 
         });
         res.on('end', function(){
-        	var isoDate = new Date(timestamp).toISOString();
+        	var isoDate = timestamp.toString();
         	console.log("live-gallery/"+dir+"/"+isoDate+".jpg");
         	var path = require('path');
         	var file = path.join('../../Dropbox','live-gallery',dir,isoDate+".jpg");
