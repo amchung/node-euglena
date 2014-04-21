@@ -6,7 +6,7 @@ const list = redis.createClient();
 
 var current_block_id;
 
-const PORT = 3002;
+const PORT = 3001;
 const HOST = '171.65.102.132';
 
 var fs = require('fs');
@@ -16,6 +16,8 @@ var path = require('path');
 var express = require('express'),
 	http = require('http'),
 	server = http.createServer(app);
+
+var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");

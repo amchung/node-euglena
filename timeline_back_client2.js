@@ -18,7 +18,6 @@ var express = require('express'),
 var fs  = require('fs');
 	
 var app = express();
-var archiver = require('archiver');
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
