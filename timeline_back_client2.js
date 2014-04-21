@@ -140,6 +140,7 @@ function takeRecordShot(dir){
 }
 
 function archiveImages () {
+	var path = require('path');
 	var dir_name = path.join('../../Dropbox','live-gallery',current_block_id);
 	var file_name = path.join('../../Dropbox','live-gallery',current_block_id,"block"+current_block_id.toString()+"_images.zip");
 	var output = fs.createWriteStream(file_name);
