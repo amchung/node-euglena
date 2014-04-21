@@ -6,12 +6,16 @@ const list = redis.createClient();
 
 var current_block_id;
 
-const PORT = 3001;
+const PORT = 3002;
 const HOST = '171.65.102.132';
 
 var fs = require('fs');
 var archiver = require('archiver');
 var path = require('path');
+
+var express = require('express'),
+	http = require('http'),
+	server = http.createServer(app);
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
@@ -48,3 +52,14 @@ function archiveImages () {
 	]);
 	archive.finalize();
 }
+
+/*******************************************************************************
+  Serve zip files
+*******************************************************************************/
+
+app.use(express.static('../../Dropbox/zip'));
+app.use(express.directory('../../Dropbox/zip'));
+app.get('/', function(req, res) {
+	res.send('hello world');
+});
+app.listen(PORT);
