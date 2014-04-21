@@ -6,7 +6,7 @@ const list = redis.createClient();
 
 var current_block_id;
 
-const PORT = 3001;
+const PORT = 3002;
 const HOST = '171.65.102.132';
 
 var fs = require('fs');
