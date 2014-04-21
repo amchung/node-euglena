@@ -9,14 +9,9 @@ var current_block_id;
 const PORT = 3001;
 const HOST = '171.65.102.132';
 
-var express = require('express'),
-	http = require('http'),
-	server = http.createServer(app);
-	
-var fs  = require('fs');
-	
-var app = express();
+var fs = require('fs');
 var archiver = require('archiver');
+var path = require('path');
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
@@ -33,10 +28,9 @@ socket.on('stoprecordblock-clients', function(){
 });
 
 function archiveImages () {
-	var path = require('path');
 	var dir_name = path.join('../../Dropbox','live-gallery',current_block_id);
-	var file_name = path.join('../../Dropbox','live-gallery',current_block_id,"block"+current_block_id.toString()+"_images.zip");
-	var output = fs.createWriteStream(file_name);
+	//var file_name = path.join('../../Dropbox','live-gallery',current_block_id,"block_"+current_block_id.toString()+"_images.zip");
+	var output = fs.createWriteStream("block_"+current_block_id.toString()+"_images.zip");
 	var archive = archiver('zip');
 	
 	output.on('close', function(){
