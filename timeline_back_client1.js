@@ -28,7 +28,7 @@ socket.on('stoprecordblock-clients', function(){
 });
 
 function archiveImages () {
-	var dir_name = path.join('../../Dropbox','zip',current_block_id);
+	var dir_name = path.join('../../Dropbox','live-gallery',current_block_id);
 	var file_name = path.join('../../Dropbox','zip',"block_"+current_block_id.toString()+"_images.zip");
 	var output = fs.createWriteStream(file_name);
 	var archive = archiver('zip');
