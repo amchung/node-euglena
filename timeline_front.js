@@ -92,10 +92,10 @@ var now = new Date();
 			var s = now.getSeconds();
         	if(current_block_record){
 			record_button = true;
-        		socket.emit('recordblock',current_block_id);
+        		io.sockets.emit('recordblock',current_block_id);
         	}else{
         		if((s==0)&&(m%5==0)&&(record_button)) {
-			  socket.emit('stoprecordblock');
+			  io.sockets.emit('stoprecordblock');
 			  record_button = false;
 			}
         	}
