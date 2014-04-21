@@ -22,12 +22,12 @@ socket.on('connect', function() {
 	console.log("Connected to front server..");
 });
 
-socket.on('recordblock', function(data){
+socket.on('recordblock-clients', function(data){
   	current_block_id = String(data);
 	console.log("RECORD ON:"+ current_block_id);
 });
 
-socket.on('stoprecordblock', function(){
+socket.on('stoprecordblock-clients', function(){
 	archiveImages();
   	console.log("RECORD OFF //////////////");
 });
