@@ -47,7 +47,6 @@ socket.on('recordblock', function(data){
 
 socket.on('stoprecordblock', function(){
   	//current_block_id = data;
-	archiveImages();
   	console.log("RECORD OFF //////////////");
 });
 
