@@ -18,6 +18,7 @@ var express = require('express'),
 var fs  = require('fs');
 	
 var app = express();
+var archiver = require('archiver');
 
 socket.on('connect', function() {
 	console.log("Connected to front server..");
@@ -46,6 +47,7 @@ socket.on('recordblock', function(data){
 
 socket.on('stoprecordblock', function(){
   	//current_block_id = data;
+	archiveImages();
   	console.log("RECORD OFF //////////////");
 });
 
@@ -137,3 +139,24 @@ function takeRecordShot(dir){
 	});
 }
 
+function archiveImages () {
+	var dir_name = path.join('../../Dropbox','live-gallery',current_block_id);
+	var file_name = path.join('../../Dropbox','live-gallery',current_block_id,"block"+current_block_id.toString()+"_images.zip");
+	var output = fs.createWriteStream(file_name);
+	var archive = archiver('zip');
+	
+	output.on('close', function(){
+		console.log(archive.pointer() + ' total bytes');
+		console.log('archiver has been finalized and the output file descriptor has closed.');
+	});
+	
+	archive.on('error', function(err){
+		throw err;	
+	});
+	
+	archive.pipe(output);
+	archive.bulk([
+		{ expand: true, cwd: dir_name , src: ['**'], dest: dir_name }
+	]);
+	archive.finalize();
+}

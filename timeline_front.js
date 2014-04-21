@@ -10,6 +10,7 @@ var _ = require('underscore');
 
 var current_block_id;
 var current_block_record;
+var record_button=false;
 
 markTimeblock();
 
@@ -90,9 +91,13 @@ var now = new Date();
         	var m = now.getMinutes();
 			var s = now.getSeconds();
         	if(current_block_record){
+			record_button = true;
         		socket.emit('recordblock',current_block_id);
         	}else{
-        		if((s==0)&&(m%5==0)) {socket.emit('stoprecordblock');}
+        		if((s==0)&&(m%5==0)&&(record_button)) {
+			  socket.emit('stoprecordblock');
+			  record_button = false;
+			}
         	}
         	if((s==0)&&(m%5==4)){
         	//if(s==0){
