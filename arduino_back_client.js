@@ -41,7 +41,7 @@ socket.on('recordblock', function(data){
   	console.log("RECORD ON:"+ current_block_id);	
 });
 
-socket.on('stoprecordblock', function(){
+socket.on('stoprecordblock', function(data){
   	current_block_id = data;
   	RecordOn = false;
   	console.log("RECORD OFF /////////////");
