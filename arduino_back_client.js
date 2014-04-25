@@ -53,6 +53,7 @@ socket.on('disconnect', function(client) {
 });
 
 socket.on('execute-pattern', function(msg){
+	clearInterval(myClock);
 	var zero = new Date().getTime();
 	var i = 0;
 	var array = msg.split("%%");
@@ -65,7 +66,11 @@ socket.on('execute-pattern', function(msg){
 		arduino(command_array[i]);
 		i++;
 	    }
-	    if (i == command_array.length) clearInterval(interval);
+	    if (i == command_array.length)
+	    {
+		clearInterval(interval);
+		myClock=setInterval(function(){myTimer()},500);
+	    }
 	}
 	
 	var interval = setInterval(function(){recurs()},50);
