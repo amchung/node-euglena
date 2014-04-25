@@ -97,7 +97,7 @@ var now = new Date();
         	}else{
         		if((s==0)&&(m%5==0)&&(record_button)) {
 			  socket.emit('stoprecordblock');
-			  io.sockets.emit('stoprecordblock-clients');
+			  io.sockets.emit('stoprecordblock-clients',current_block_id);
 			  record_button = false;
 			}
         	}
