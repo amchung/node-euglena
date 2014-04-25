@@ -86,7 +86,7 @@ var now = new Date();
 				}else{
 					current_block_record = false;
 				}
-				console.log("current block record on: "+current_block_record +" with exp id "+res); 
+				//console.log("current block record on: "+current_block_record +" with exp id "+res); 
 			});
         	var m = now.getMinutes();
 			var s = now.getSeconds();
