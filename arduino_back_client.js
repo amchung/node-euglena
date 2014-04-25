@@ -35,13 +35,13 @@ socket.on('tic', function(data){
 	oldtime = data;
 });
 
-socket.on('recordblock', function(data){
+socket.on('arduino-recordblock', function(data){
   	current_block_id = data;
   	RecordOn = true;
   	console.log("RECORD ON:"+ current_block_id);	
 });
 
-socket.on('stoprecordblock', function(){
+socket.on('arduino-stoprecordblock', function(){
   	//current_block_id = data;
   	RecordOn = false;
   	console.log("RECORD OFF /////////////");
@@ -75,7 +75,7 @@ socket.on('execute-pattern', function(msg){
 	    }
 	}
 	
-	var interval = setInterval(function(){recurs()},50);
+	var interval = setInterval(function(){recurs()},10);
 	//recurs();
 });
 
