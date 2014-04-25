@@ -41,7 +41,7 @@ socket.on('recordblock', function(data){
   	console.log("RECORD ON:"+ current_block_id);	
 });
 
-socket.on('stoprecordblock', function(data){
+socket.on('stoprecordblock', function(){
   	current_block_id = data;
   	RecordOn = false;
   	console.log("RECORD OFF /////////////");
@@ -88,7 +88,7 @@ function arduino(command){
 	var d = new Date().getTime();
 	if(RecordOn==true){
 		var keyname = "tb_id:"+current_block_id+":arduino-log";
-		redis_zadd(keyname, d , command);
+		redis_zadd(keyname, d , d+"#"+command);
 	}
 	var str = command.split("&&");
     
