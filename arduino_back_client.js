@@ -65,9 +65,11 @@ socket.on('execute-pattern', function(msg){
 		arduino(command_array[i]);
 		i++;
 	    }
-	    if (i < command_array.length) recurs();
+	    if (i == command_array.length) clearInterval(interval);
 	}
-	recurs();
+	
+	var interval = setInterval(function(){recurs()},50);
+	//recurs();
 });
 
 socket.on('arduino-commands', function(msg) {
