@@ -52,13 +52,36 @@ socket.on('disconnect', function(client) {
 	RecordOn = false;
 });
 
+socket.on('execute-pattern', function(msg){
+	var zero = new Date().getTime();
+	var i = 0;
+	var array = msg.split("%%");
+	var command_array = array[1].split("$$");
+	var time_array = array[0].split("$$");
+	
+	function recurs() {
+	    var t = new Date().getTime() - zero;
+	    if (time_array[i] < t) {
+		arduino(command_array[i]);
+		i++;
+	    }
+	    if (i < command_array.length) recurs();
+	}
+	recurs();
+});
+
 socket.on('arduino-commands', function(msg) {
+	arduino(msg);
+});
+
+
+function arduino(command){
 	var d = new Date().getTime();
 	if(RecordOn==true){
 		var keyname = "tb_id:"+current_block_id+":arduino-log";
-		redis_zadd(keyname, d , msg);
+		redis_zadd(keyname, d , command);
 	}
-	var str = msg.split("&&");
+	var str = command.split("&&");
     
 	function redis_zadd(key,z,value){
 		client.zadd(key,z,value, function(err) {
@@ -80,14 +103,14 @@ socket.on('arduino-commands', function(msg) {
 									board.emit('valveTrigger', str[1]);
 								break;
 							}
-						 console.log(msg);
-						 socket.emit('/back/arduino/#excutedRequest', msg);
+						 console.log(command);
+						 socket.emit('/back/arduino/#excutedRequest', command);
 					 }
 				});
 			  }
 		});
 	}
-});
+}
 
 ////////////////////////////////////////////////
 //  johnny-five arduino functions

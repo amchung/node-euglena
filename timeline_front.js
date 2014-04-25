@@ -145,28 +145,41 @@ var now = new Date();
 	}
 
 	function one_block(now){
-     	//take a snapshot, image = image_dir
-     	list.set("tb_id:"+current_block_id+":past", 1);
-     	list.set("tb_id:"+current_block_id+":current", 0);
-     	console.log("bye bye block "+current_block_id);
-     	current_block_id = current_block_id+1;
-     	list.set("global:current:tb_id", current_block_id);
-     	list.set("tb_id:"+current_block_id+":current",1);
-     	
-     	list.get("tb_id:"+current_block_id+":locked", function(err,res){
-		if (err){
-			console.log("error: "+err);
-		}
-			if(res == 1){
-				current_block_record = true;
-				console.log("current block record on: "+current_block_record); 
-			}else{
-				current_block_record = false;
-			}
-		});
-     	
-     	console.log("hello block "+current_block_id);    	
-     	//reload blocks
+	    //take a snapshot, image = image_dir
+	    list.set("tb_id:"+current_block_id+":past", 1);
+	    list.set("tb_id:"+current_block_id+":current", 0);
+	    console.log("bye bye block "+current_block_id);
+	    current_block_id = current_block_id+1;
+	    list.set("global:current:tb_id", current_block_id);
+	    list.set("tb_id:"+current_block_id+":current",1);
+	    
+	    list.get("tb_id:"+current_block_id+":locked", function(err,res){
+		    if (err){
+			    console.log("error: "+err);
+		    }
+			    if(res == 1){
+				    current_block_record = true;
+				    console.log("current block record on: "+current_block_record); 
+			    }else{
+				    current_block_record = false;
+			    }
+	    });
+	    list.get("tb_id:"+current_block_id+":pattern_id", function(err,res){
+		    if (err){
+			    console.log("error: "+err);
+		    }else{
+			    var pattern_id = Number(res);
+			    if(pattern_id > 0){
+				  list.get("pattern_id:" + res, function(err,res){
+				      console.log("automatic execution of pattern #" + pattern_id);
+				      io.sockets.emit('execute-pattern',res);
+				  });
+			    }
+		    }
+	    });
+	    
+	    console.log("hello block "+current_block_id);    	
+	    //reload blocks
 	}
 	
 	function lock_current_block(){
