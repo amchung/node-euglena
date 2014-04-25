@@ -59,6 +59,8 @@ socket.on('execute-pattern', function(msg){
 	var array = msg.split("%%");
 	var command_array = array[1].split("$$");
 	var time_array = array[0].split("$$");
+	command_array.splice(-1,1);
+	time_array.splice(-1,1);
 	
 	function recurs() {
 	    var t = new Date().getTime() - zero;
