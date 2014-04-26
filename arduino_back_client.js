@@ -53,11 +53,13 @@ socket.on('disconnect', function(client) {
 });
 
 socket.on('execute-pattern', function(msg){
-	current_block_id = msg.block_id;
+	var arr = msg.split("##");
+	current_block_id = arr[0];
+	console.log("RECORD ON:"+ current_block_id)
 	clearInterval(myClock);
 	var zero = new Date().getTime();
 	var i = 0;
-	var array = msg.pattern.split("%%");
+	var array = arr[1].split("%%");
 	var command_array = array[1].split("$$");
 	var time_array = array[0].split("$$");
 	command_array.splice(-1,1);

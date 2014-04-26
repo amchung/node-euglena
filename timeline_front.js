@@ -172,9 +172,7 @@ var now = new Date();
 			    if(pattern_id > 0){
 				  list.get("pattern_id:" + res, function(err,res){
 				      console.log("automatic execution of pattern #" + pattern_id);
-				      var message = new Object;
-				      message.pattern = res;
-				      message.block_id = current_block_id;
+				      var message = current_block_id + "##"+ res;
 				      io.sockets.emit('execute-pattern',message);
 				  });
 			    }
