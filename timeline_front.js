@@ -196,7 +196,7 @@ var now = new Date();
 
 function markTimeblock(){
 	var block = 5*60*1000;
-	var start = Date.UTC(2014,02,1);
+	var start = Date.UTC(2014,04,1);
 	var end = new Date();
 	end = end.getTime();
 	var blocks = Math.floor((end-start)/block);

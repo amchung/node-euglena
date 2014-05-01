@@ -3,8 +3,10 @@ const list = redis.createClient();
 
 console.log("Populate time block DB: STARTED");
 
-//from Mar 1 2014 0:00 am
-//to July 1 2014 0:00 am
+/* don't use the below loop to populate future time blocks
+ * check global:next_tb_id
+ */
+ 
 //for every 5min time block
 
 var block = 5*60*1000;
@@ -29,8 +31,8 @@ var blocks = (end-start)/block;
      SET tb_id:1000:current 0
      SET tb_id:1000:image -1*/
 
-//list.set("global:next_exp_id",1);
-//list.set("global:next_pattern_id",0);
+//list.set("global:next_exp_id",0);
+//list.set("global:next_pattern_id",1);
      
 for (var i=0;i<blocks;i++) {
 	var time = start + i * block;
