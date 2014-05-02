@@ -131,13 +131,15 @@ var now = new Date();
 		(function loop() {
 			now = new Date();      
 		if (now.getSeconds() === 0){
-				if (now.getMinutes()%5 == 4){
-					lock_current_block();
-				}
 				if (now.getMinutes()%5 == 0){
 					cb(now);
 				}
-			}
+		}
+		
+		if ((now.getMinutes()%5 == 4)&&(now.getSeconds() == 10)){
+					lock_current_block();
+		}
+		
 			now = new Date();                  // allow for time passing
 			var delay = 1000 - (now % 1000); // exact ms to next minute interval
 			setTimeout(loop, delay);
