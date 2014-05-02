@@ -42,6 +42,9 @@ socket.on('recordblock', function(data){
 });
 
 socket.on('stoprecordblock', function(data){
+	// turn off all LEDs
+	arduino('0&&0^0^0^0');
+	
   	current_block_id = data;
   	RecordOn = false;
   	console.log("RECORD OFF /////////////");
