@@ -1,0 +1,50 @@
+const redis = require('redis');
+const list = redis.createClient();
+
+var current_block_id;
+
+const PORT = 3002;
+const HOST = '171.65.102.132';
+
+var fs = require('fs');
+var archiver = require('archiver');
+var path = require('path');
+
+var express = require('express'),
+	http = require('http'),
+	server = http.createServer(app);
+
+var app = express();
+
+var i = 5448;
+var end = 5719; 
+archiveImages();
+function archiveImages () {
+	if(i<end){
+		var id = i.toString();
+		var dir_name = path.join('../../Dropbox','live-gallery',id);
+		var file_name = path.join('../../Dropbox','zip',"block_"+id+"_images.zip");
+		var output = fs.createWriteStream(file_name);
+		var archive = archiver('zip');
+	
+		output.on('close', function(){
+			console.log(archive.pointer() + ' total bytes');
+			console.log('Closed:'+id);
+			i++;
+			archiveImages();
+		});
+		
+		archive.on('error', function(err){
+			throw err;	
+		});
+	
+		archive.pipe(output);
+		archive.bulk([
+			{ expand: true, cwd: dir_name , src: ['*.jpg'] }
+		]);
+		archive.finalize();
+	}else{
+		console.log('DONE!');
+		process.exit();
+	}
+}

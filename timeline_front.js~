@@ -10,6 +10,7 @@ var _ = require('underscore');
 
 var current_block_id;
 var current_block_record;
+var record_button=false;
 
 markTimeblock();
 
@@ -76,37 +77,34 @@ var now = new Date();
         });
         
         socket.on('lookimgclock', function(){
-        	list.get("tb_id:"+current_block_id+":locked", function(err,res){
+        	list.get("tb_id:"+current_block_id+":exp_id", function(err,res){
 			if (err){
 				console.log("error: "+err);
 			}
-				if(res == 1){
+				if(res > 0){
 					current_block_record = true;
-					//console.log("current block record on: "+current_block_record); 
 				}else{
 					current_block_record = false;
 				}
+				//console.log("current block record on: "+current_block_record +" with exp id "+res); 
 			});
         	var m = now.getMinutes();
 			var s = now.getSeconds();
-			
-			if (m>3){
-				if(current_block_record){
-					socket.emit('recordblock',current_block_id);
-				}else{
-					socket.emit('stoprecordblock');
-				}
-			}else{
-				if(current_block_record){
-					
-				}
-			};
         	if(current_block_record){
-        		if(m>3){socket.emit('recordblock',current_block_id);}
-        	}else{
-        		if((s==0)&&(m%5==0)) {socket.emit('stoprecordblock');}
+			record_button = true;
+			io.sockets.emit('recordblock-clients',current_block_id);
+			socket.emit('recordblock',current_block_id);
         	}
-        	if((s==0)&&(m%5==3)){
+        	
+		if((s==0)&&(m%5==0)&&(record_button)) {
+			if(record_button){
+			  	io.sockets.emit('stoprecordblock-clients',current_block_id);
+			}
+			  socket.emit('stoprecordblock');
+			  record_button = false;
+        	}
+
+        	if((s==0)&&(m%5==4)){
         	//if(s==0){
         		socket.emit('snapshot',current_block_id);
         	}else{
@@ -136,13 +134,15 @@ var now = new Date();
 		(function loop() {
 			now = new Date();      
 		if (now.getSeconds() === 0){
-				if (now.getMinutes()%5 == 3){
-					lock_current_block();
-				}
 				if (now.getMinutes()%5 == 0){
 					cb(now);
 				}
-			}
+		}
+		
+		if ((now.getMinutes()%5 == 4)&&(now.getSeconds() == 50)){
+					lock_current_block();
+		}
+		
 			now = new Date();                  // allow for time passing
 			var delay = 1000 - (now % 1000); // exact ms to next minute interval
 			setTimeout(loop, delay);
@@ -150,27 +150,42 @@ var now = new Date();
 	}
 
 	function one_block(now){
-     	//take a snapshot, image = image_dir
-     	list.set("tb_id:"+current_block_id+":past", 1);
-     	list.set("tb_id:"+current_block_id+":current", 0);
-     	console.log("bye bye block "+current_block_id);
-     	current_block_id = current_block_id+1;
-     	list.set("tb_id:"+current_block_id+":current",1);
-     	
-     	list.get("tb_id:"+current_block_id+":locked", function(err,res){
-		if (err){
-			console.log("error: "+err);
-		}
-			if(res == 1){
-				current_block_record = true;
-				console.log("current block record on: "+current_block_record); 
-			}else{
-				current_block_record = false;
-			}
-		});
-     	
-     	console.log("hello block "+current_block_id);    	
-     	//reload blocks
+	    //take a snapshot, image = image_dir
+	    list.set("tb_id:"+current_block_id+":past", 1);
+	    list.set("tb_id:"+current_block_id+":current", 0);
+	    console.log("bye bye block "+current_block_id);
+	    current_block_id = current_block_id+1;
+	    list.set("global:current:tb_id", current_block_id);
+	    list.set("tb_id:"+current_block_id+":current",1);
+	    
+	    list.get("tb_id:"+current_block_id+":locked", function(err,res){
+		    if (err){
+			    console.log("error: "+err);
+		    }
+			    if(res == 1){
+				    current_block_record = true;
+				    console.log("current block record on: "+current_block_record); 
+			    }else{
+				    current_block_record = false;
+			    }
+	    });
+	    list.get("tb_id:"+current_block_id+":pattern_id", function(err,res){
+		    if (err){
+			    console.log("error: "+err);
+		    }else{
+			    var pattern_id = Number(res);
+			    if(pattern_id > 0){
+				  list.get("pattern_id:" + res, function(err,res){
+				      console.log("automatic execution of pattern #" + pattern_id);
+				      var message = current_block_id + "##"+ res;
+				      io.sockets.emit('execute-pattern',message);
+				  });
+			    }
+		    }
+	    });
+	    
+	    console.log("hello block "+current_block_id);    	
+	    //reload blocks
 	}
 	
 	function lock_current_block(){
@@ -186,7 +201,7 @@ var now = new Date();
 
 function markTimeblock(){
 	var block = 5*60*1000;
-	var start = Date.UTC(2014,02,1);
+	var start = Date.UTC(2014,04,1);
 	var end = new Date();
 	end = end.getTime();
 	var blocks = Math.floor((end-start)/block);
@@ -195,7 +210,9 @@ function markTimeblock(){
 	console.log(end);
 	console.log((end-start)/block);
 	console.log(blocks);
-     
+    
+    list.set("global:current:tb_id", blocks);
+    
 	for (var i=0;i<(blocks-1);i++) {
 		list.set("tb_id:"+i+":locked", 1);
 		list.set("tb_id:"+i+":past", 1);

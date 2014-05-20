@@ -92,15 +92,16 @@ var now = new Date();
 			var s = now.getSeconds();
         	if(current_block_record){
 			record_button = true;
+			io.sockets.emit('recordblock-clients',current_block_id);
 			socket.emit('recordblock',current_block_id);
-        		io.sockets.emit('recordblock-clients',current_block_id);
         	}else{
-        		if((s==0)&&(m%5==0)&&(record_button)) {
-			  socket.emit('stoprecordblock');
+			if((s==0)&&(m%5==0)&&(record_button)) {
 			  io.sockets.emit('stoprecordblock-clients',current_block_id);
+			  socket.emit('stoprecordblock');
 			  record_button = false;
-			}
-        	}
+        		}
+		}
+
         	if((s==0)&&(m%5==4)){
         	//if(s==0){
         		socket.emit('snapshot',current_block_id);
@@ -136,7 +137,7 @@ var now = new Date();
 				}
 		}
 		
-		if ((now.getMinutes()%5 == 4)&&(now.getSeconds() == 10)){
+		if ((now.getMinutes()%5 == 4)&&(now.getSeconds() == 50)){
 					lock_current_block();
 		}
 		
