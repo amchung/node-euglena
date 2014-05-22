@@ -12,6 +12,7 @@ const HOST = '171.65.102.132';
 var fs = require('fs');
 var archiver = require('archiver');
 var path = require('path');
+var arch_button = true;
 
 var express = require('express'),
 	http = require('http'),
@@ -29,8 +30,11 @@ socket.on('recordblock-clients', function(data){
 });
 
 socket.on('stoprecordblock-clients', function(){
-	archiveImages((current_block_id).toString());
-  	console.log("RECORD OFF //////////////");
+	if(arch_button){
+		arch_button = false;
+		archiveImages((current_block_id).toString());
+  		console.log("RECORD OFF //////////////");
+	}
 });
 
 /*socket.on('get-zip', function(data){
@@ -48,6 +52,7 @@ function archiveImages (id) {
 	output.on('close', function(){
 		console.log(archive.pointer() + ' total bytes');
 		console.log('archiver has been finalized and the output file descriptor has closed.');
+		arch_button = true;
 	});
 	
 	archive.on('error', function(err){

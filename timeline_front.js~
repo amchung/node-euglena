@@ -81,35 +81,39 @@ var now = new Date();
 			if (err){
 				console.log("error: "+err);
 			}
-				if(res > 0){
+				if(res > -1){
 					current_block_record = true;
 				}else{
 					current_block_record = false;
 				}
-				//console.log("current block record on: "+current_block_record +" with exp id "+res); 
-			});
-        	var m = now.getMinutes();
+			//console.log("current block record on: "+current_block_record +" with exp id "+res); 
+			var m = now.getMinutes();
 			var s = now.getSeconds();
-        	if(current_block_record){
-			record_button = true;
-			io.sockets.emit('recordblock-clients',current_block_id);
-			socket.emit('recordblock',current_block_id);
-        	}
-        	
-		if((s==0)&&(m%5==0)&&(record_button)) {
-			if(record_button){
-			  	io.sockets.emit('stoprecordblock-clients',current_block_id);
+        		if(current_block_record){
+				record_button = true;
+			}else{
+				record_button = false;
 			}
-			  socket.emit('stoprecordblock');
-			  record_button = false;
-        	}
 
-        	if((s==0)&&(m%5==4)){
-        	//if(s==0){
-        		socket.emit('snapshot',current_block_id);
-        	}else{
-        		socket.emit('tic', m+":"+s);
-        	}
+			if(record_button){
+				if((s===0)&&(m%5===0)) {
+				 	io.sockets.emit('stoprecordblock-clients');
+					socket.emit('stoprecordblock');
+				 	record_button = false;
+        			}else{
+					io.sockets.emit('recordblock-clients',current_block_id);
+					socket.emit('recordblock',current_block_id);
+				}
+			}
+
+        		if((s==0)&&(m%5==4)){
+        		//if(s==0){
+        			socket.emit('snapshot',current_block_id);
+        		}else{
+        			socket.emit('tic', m+":"+s);
+        		}		
+		});
+        	
         });
         
         socket.on('/back/arduino/#excutedRequest', function(msg){

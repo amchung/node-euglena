@@ -10,9 +10,13 @@ console.log("Populate time block DB: STARTED");
 //for every 5min time block
 
 var block = 5*60*1000;
-var start = Date.UTC(2014,02,1); // Mar 1 GMT
-var end = Date.UTC(2014,06,1); // July 1 GMT
-var blocks = (end-start)/block;
+//var start = Date.UTC(2014,02,1); // Mar 1 GMT
+//var end = Date.UTC(2014,06,1); // July 1 GMT
+var start_date = Date.UTC(2014,08,16,10,45); // Mar 1 GMT
+var end_date = Date.UTC(2015,02,1); // July 1 GMT
+var blocks = (end_date-start_date)/block;
+
+var start_i = 39873;
 
 	/*
      INCR global:next_tb_id
@@ -34,20 +38,20 @@ var blocks = (end-start)/block;
 //list.set("global:next_exp_id",0);
 //list.set("global:next_pattern_id",1);
      
-for (var i=0;i<blocks;i++) {
-	var time = start + i * block;
+for (var i=start_i;i<start_i+blocks;i++) {
+	var time = start_date + (i-start_i) * block;
 	
 	//list.incr("global:next_tb_id");
-	//list.set("tb_id:"+i+":time", time);
-	//list.set("tb_id:"+i+":locked", 0);
-	//list.set("tb_time:"+time+":tb_id", i);
-	//list.set("tb_id:"+i+":user_id", -1);
-	//list.set("tb_id:"+i+":exp_id", -1);
-	//list.set("tb_id:"+i+":pattern_id", -1);
-	//list.set("tb_id:"+i+":past", 0);
-	//list.set("tb_id:"+i+":admin", 0);
-	//list.set("tb_id:"+i+":current", 0);
-	//list.set("tb_id:"+i+":image", -1);
+	list.set("tb_id:"+i+":time", time);
+	list.set("tb_id:"+i+":locked", 0);
+	list.set("tb_time:"+time+":tb_id", i);
+	list.set("tb_id:"+i+":user_id", -1);
+	list.set("tb_id:"+i+":exp_id", -1);
+	list.set("tb_id:"+i+":pattern_id", -1);
+	list.set("tb_id:"+i+":past", 0);
+	list.set("tb_id:"+i+":admin", 0);
+	list.set("tb_id:"+i+":current", 0);
+	list.set("tb_id:"+i+":image", -1);
 	list.set("tb_id:"+i+":username", -1);
 	
 	console.log("UTC: "+time+" created");

@@ -16,8 +16,11 @@ var express = require('express'),
 
 var app = express();
 
-var i = 5448;
-var end = 5719; 
+//var i = 5448;
+//var end = 5719; 
+var i = 5721;
+var end = 5975;
+
 archiveImages();
 function archiveImages () {
 	if(i<end){
@@ -44,7 +47,7 @@ function archiveImages () {
 		]);
 		archive.finalize();
 	}else{
-		console.log('closed:'+id);
+		console.log('DONE!');
 		process.exit();
 	}
 }
