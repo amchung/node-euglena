@@ -9,7 +9,7 @@ var list = redis.createClient();
 var _ = require('underscore');
 
 var current_block_id;
-var current_block_record;
+var current_record_button;
 var record_button=false;
 
 markTimeblock();
@@ -81,30 +81,33 @@ var now = new Date();
 			if (err){
 				console.log("error: "+err);
 			}
-				if(res > -1){
-					current_block_record = true;
-				}else{
-					current_block_record = false;
-				}
-			//console.log("current block record on: "+current_block_record +" with exp id "+res); 
-			var m = now.getMinutes();
-			var s = now.getSeconds();
-        		if(current_block_record){
-				record_button = true;
+
+			if(res > -1){
+				current_record_button = true;
 			}else{
-				record_button = false;
+				current_record_button = false;
 			}
 
-			if(record_button){
-				if((s===0)&&(m%5===0)) {
-				 	io.sockets.emit('stoprecordblock-clients');
+			//console.log("current block record on: "+current_block_record +" with exp id "+res); 
+
+			var m = now.getMinutes();
+			var s = now.getSeconds();
+
+        		if(record_button != current_record_button){
+				if(record_button){
+					io.sockets.emit('stoprecordblock-clients');
 					socket.emit('stoprecordblock');
-				 	record_button = false;
-        			}else{
+					record_button = false;
+				}
+				
+			}else{
+				if(current_record_button){
 					io.sockets.emit('recordblock-clients',current_block_id);
 					socket.emit('recordblock',current_block_id);
 				}
 			}
+
+			record_button = current_record_button;
 
         		if((s==0)&&(m%5==4)){
         		//if(s==0){
@@ -179,7 +182,7 @@ var now = new Date();
 		    }else{
 			    var pattern_id = Number(res);
 			    if(pattern_id > 0){
-				  list.get("pattern_id:" + res, function(err,res){
+				  list.get("pattern_id:" + res+":pattern", function(err,res){
 				      console.log("automatic execution of pattern #" + pattern_id);
 				      var message = current_block_id + "##"+ res;
 				      io.sockets.emit('execute-pattern',message);
