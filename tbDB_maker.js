@@ -44,7 +44,8 @@ list.set("global:next_tag_id",1);
      
 //for (var i=start_i;i<start_i+blocks;i++) {
 for (var i=0;i<blocks;i++) {
-	var time = start_date + (i-start_i) * block;
+	//var time = start_date + (i-start_i) * block;
+	var time = start_date + i * block;
 	
 	list.incr("global:next_tb_id");
 	list.set("tb_id:"+i+":time", time);
