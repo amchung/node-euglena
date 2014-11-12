@@ -21,10 +21,17 @@ var app = express();
 
 socket.on('connect', function() {
 	console.log("Connected to clock server..");
-	myClock=setInterval(function(){myTimer()},500);
 });
 
+var valveState = 0;
+
 function myTimer(){
+	//valve delay
+	if(valveState>0){
+		valveState = valveState - 1;
+	}else{
+		board.emit('valveClose');
+	}
 	socket.emit('lookimgclock');
 }
 
@@ -111,13 +118,13 @@ function arduino(command){
 						     switch(Number(str[0]))
 						     {
 						     	case 0:
-									var ledArray = str[1].split("^");
-									board.emit('changeLED', ledArray);
-								break;
-								case 1:
-									board.emit('valveTrigger', str[1]);
-								break;
-							}
+								var ledArray = str[1].split("^");
+								board.emit('changeLED', ledArray);
+							break;
+							case 1:
+								board.emit('valveTrigger', str[1]);
+							break;
+						}
 						 console.log(command);
 						 socket.emit('/back/arduino/#excutedRequest', command);
 					 }
@@ -140,8 +147,9 @@ board.on("ready", function(){
         this.analogWrite(6,0);
         this.analogWrite(9,0);
         this.analogWrite(10,0);
-        this.digitalWrite(12, 0);
+        this.digitalWrite(12,0);
 	console.log("Arduino ready to use")
+	myClock=setInterval(function(){myTimer()},500);
 });
 
 board.on('changeLED', function(ledArray){
@@ -152,36 +160,27 @@ board.on('changeLED', function(ledArray){
     });
     
 board.on('valveOpen', function(){
+	console.log("Valve: OPEN");
     	this.digitalWrite(12, 1);
-	/*var delay = 1000; // 1000 msec delay
-	var now = new Date();
-	var desiredTime = new Date().setMilliseconds(now.getMilliseconds() + delay);
-	while (now < desiredTime) {
-    		now = new Date(); // update the current time
-	}
-	this.digitalWrite(12, 0);*/
     });
     
 board.on('valveClose', function(){
-    	this.digitalWrite(12, 0);
-	/*var delay = 1000; // 1000 msec delay
-	var now = new Date();
-	var desiredTime = new Date().setMilliseconds(now.getMilliseconds() + delay);
-	while (now < desiredTime) {
-    		now = new Date(); // update the current time
-	}
-	this.digitalWrite(12, 0);*/
+	console.log("Valve: CLOSED");
+    	this.digitalWrite(12, 0);	
     });
-    
-board.on('valveTrigger', function(){
-		this.digitalWrite(12, 1);
-		var delay = 1000; // 1000 msec delay
-		var now = new Date();
-		var desiredTime = new Date().setMilliseconds(now.getMilliseconds() + delay);
-		while (now < desiredTime) {
-				now = new Date(); // update the current time
-		}
-		this.digitalWrite(12, 0);
-    });
+
+
+board.on('valveTrigger', function(dl){
+	board.emit('valveOpen');	
+	console.log("delay:"+dl);
+	var delay = parseInt(dl);
+		//var now = new Date();
+		//var desiredTime = new Date().setMilliseconds(now.getMilliseconds() + delay);
+		//while (now < desiredTime) {
+		//	now = new Date(); // update the current time
+		//}
+		//this.digitalWrite(12, 0);
+	valveState = Math.floor(delay/500);
+});
                                               //
 ////////////////////////////////////////////////

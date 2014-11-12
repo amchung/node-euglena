@@ -51,7 +51,7 @@ var now = new Date();
 					//pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
   				case "/arduino/#sendvalvetrigger":
-  					io.sockets.emit('arduino-commands',"1&&"+"Valve triggered.");
+  					io.sockets.emit('arduino-commands',"1&&"+msg.delay);
   					//pub.publish("realtime", "1&&"+"Valve triggered.");
   					break;
 			}
@@ -177,20 +177,28 @@ var now = new Date();
 				    current_block_record = false;
 			    }
 	    });
-	    list.get("tb_id:"+current_block_id+":pattern_id", function(err,res){
-		    if (err){
-			    console.log("error: "+err);
-		    }else{
-			    var pattern_id = Number(res);
-			    if(pattern_id > 0){
-				  list.get("pattern_id:" + res+":pattern", function(err,res){
-				      console.log("automatic execution of pattern #" + pattern_id);
-				      var message = current_block_id + "##"+ res;
-				      io.sockets.emit('execute-pattern',message);
-				  });
-			    }
-		    }
-	    });
+	    list.get("tb_id:"+current_block_id+":username", function(err,res){
+		if (err){
+			console.log("error: "+err);
+		}else{
+			var target_username = res;
+			list.zadd("username:"+target_username+":tb_id", new Date().getTime(), current_block_id);
+		    	list.get("tb_id:"+current_block_id+":pattern_id", function(err,res){
+				if (err){
+					console.log("error: "+err);
+				}else{
+					var pattern_id = Number(res);
+					if(pattern_id > 0){
+						list.get("pattern_id:" + res+":pattern", function(err,res){
+							console.log("automatic execution of pattern #" + pattern_id);
+						      	var message = current_block_id + "##"+ res;
+						      	io.sockets.emit('execute-pattern',message);
+						  });
+					}
+				}
+		    	});
+		}
+	   });
 	    
 	    console.log("hello block "+current_block_id);    	
 	    //reload blocks

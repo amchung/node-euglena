@@ -47,10 +47,11 @@ var now = new Date();
   					pub.publish("realtime", "1&&"+msg.message);
   				case "/arduino/#sendLEDarrow":
   					io.sockets.emit('arduino-commands',"0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
+					console.log("0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
 					//pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
   				case "/arduino/#sendvalvetrigger":
-  					io.sockets.emit('arduino-commands',"1&&"+"Valve triggered.");
+  					io.sockets.emit('arduino-commands',"1&&"+msg.delay);
   					//pub.publish("realtime", "1&&"+"Valve triggered.");
   					break;
 			}
@@ -182,7 +183,7 @@ var now = new Date();
 		    }else{
 			    var pattern_id = Number(res);
 			    if(pattern_id > 0){
-				  list.get("pattern_id:" + res, function(err,res){
+				  list.get("pattern_id:" + res+":pattern", function(err,res){
 				      console.log("automatic execution of pattern #" + pattern_id);
 				      var message = current_block_id + "##"+ res;
 				      io.sockets.emit('execute-pattern',message);
@@ -208,7 +209,7 @@ var now = new Date();
 
 function markTimeblock(){
 	var block = 5*60*1000;
-	var start = Date.UTC(2014,04,1);
+	var start = Date.UTC(2014,06,1);
 	var end = new Date();
 	end = end.getTime();
 	var blocks = Math.floor((end-start)/block);
