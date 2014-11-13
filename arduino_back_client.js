@@ -42,7 +42,7 @@ socket.on('tic', function(data){
 	oldtime = data;
 });
 
-socket.on('arduino-recordblock', function(data){
+socket.on('recordblock', function(data){
   	current_block_id = data;
   	RecordOn = true;
   	console.log("RECORD ON:"+ current_block_id);	
