@@ -160,7 +160,7 @@ var now = new Date();
 	    // stop recording for the past block
 	    if (record_button) {
 		io.sockets.emit('stoprecordblock-archiver');
-		socket.emit('stoprecordblock');
+		io.sockets.emit('stoprecordblock');
 		record_button = false;
 	    }
 	    
