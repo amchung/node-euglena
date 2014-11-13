@@ -42,7 +42,7 @@ socket.on('tic', function(data){
 	oldtime = data;
 });
 
-socket.on('recordblock', function(data){
+socket.on('arduino-recordblock', function(data){
   	current_block_id = data;
   	RecordOn = true;
   	console.log("RECORD ON:"+ current_block_id);	
@@ -65,7 +65,7 @@ socket.on('disconnect', function(client) {
 socket.on('execute-pattern', function(msg){
 	var arr = msg.split("##");
 	current_block_id = arr[0];
-	console.log("RECORD ON:"+ current_block_id)
+	console.log("execute pattern - RECORD ON:"+ current_block_id);
 	clearInterval(myClock);
 	var zero = new Date().getTime();
 	var i = 0;
