@@ -65,6 +65,7 @@ socket.on('disconnect', function(client) {
 socket.on('execute-pattern', function(msg){
 	var arr = msg.split("##");
 	current_block_id = arr[0];
+	RecordOn = true;
 	console.log("execute pattern - RECORD ON:"+ current_block_id);
 	clearInterval(myClock);
 	var zero = new Date().getTime();
