@@ -9,8 +9,9 @@ var list = redis.createClient();
 var _ = require('underscore');
 
 var current_block_id;
-var current_record_button;
 var record_button=false;
+var new_record_time=0;
+var old_record_time=0;
 
 markTimeblock();
 
@@ -84,9 +85,9 @@ var now = new Date();
 			}
 
 			if(res > -1){
-				current_record_button = true;
+				record_button = true;
 			}else{
-				current_record_button = false;
+				record_button = false;
 			}
 
 			//console.log("current block record on: "+current_block_record +" with exp id "+res); 
@@ -94,21 +95,14 @@ var now = new Date();
 			var m = now.getMinutes();
 			var s = now.getSeconds();
 
-        		if(record_button != current_record_button){
-				if(record_button){
-					io.sockets.emit('stoprecordblock-clients');
-					socket.emit('stoprecordblock');
-					record_button = false;
-				}
-				
-			}else{
-				if(current_record_button){
-					io.sockets.emit('recordblock-clients',current_block_id);
-					socket.emit('recordblock',current_block_id);
-				}
+        		new_record_time = new Date().getTime();
+			if (new_record_time - old_record_time > 100) {
+			  if(record_button){
+			      io.sockets.emit('recordblock-clients',current_block_id);
+			      socket.emit('recordblock',current_block_id);
+			      old_record_time = new_record_time;
+			  }
 			}
-
-			record_button = current_record_button;
 
         		if((s==0)&&(m%5==4)){
         		//if(s==0){
@@ -162,11 +156,20 @@ var now = new Date();
 	    list.set("tb_id:"+current_block_id+":past", 1);
 	    list.set("tb_id:"+current_block_id+":current", 0);
 	    console.log("bye bye block "+current_block_id);
+	    
+	    // stop recording for the past block
+	    if (record_button) {
+		io.sockets.emit('stoprecordblock-archiver');
+		socket.emit('stoprecordblock');
+		record_button = false;
+	    }
+	    
+	    // new block
 	    current_block_id = current_block_id+1;
 	    list.set("global:current:tb_id", current_block_id);
 	    list.set("tb_id:"+current_block_id+":current",1);
 	    
-	    list.get("tb_id:"+current_block_id+":locked", function(err,res){
+	    /*list.get("tb_id:"+current_block_id+":locked", function(err,res){
 		    if (err){
 			    console.log("error: "+err);
 		    }
@@ -176,7 +179,7 @@ var now = new Date();
 			    }else{
 				    current_block_record = false;
 			    }
-	    });
+	    });*/
 	    list.get("tb_id:"+current_block_id+":username", function(err,res){
 		if (err){
 			console.log("error: "+err);

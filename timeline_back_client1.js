@@ -29,7 +29,7 @@ socket.on('recordblock-clients', function(data){
 	console.log("RECORD ON:"+ current_block_id);
 });
 
-socket.on('stoprecordblock-clients', function(){
+socket.on('stoprecordblock-archiver', function(){
 	if(arch_button){
 		arch_button = false;
 		archiveImages((current_block_id).toString());
