@@ -47,12 +47,12 @@ var now = new Date();
   				case "update":
   					pub.publish("realtime", "1&&"+msg.message);
   				case "/arduino/#sendLEDarrow":
-  					io.sockets.emit('arduino-commands',"0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
+  					socket.emit('arduino-commands',"0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
 					console.log("0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
 					//pub.publish("realtime", "0&&"+msg.led1+"^"+msg.led2+"^"+msg.led3+"^"+msg.led4);
   					break;
   				case "/arduino/#sendvalvetrigger":
-  					io.sockets.emit('arduino-commands',"1&&"+msg.delay);
+  					socket.emit('arduino-commands',"1&&"+msg.delay);
   					//pub.publish("realtime", "1&&"+"Valve triggered.");
   					break;
 			}
